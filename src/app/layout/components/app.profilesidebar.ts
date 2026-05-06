@@ -1,8 +1,11 @@
-import { Component, computed } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { DrawerModule } from 'primeng/drawer';
 import { BadgeModule } from 'primeng/badge';
 import { LayoutService } from '@/layout/service/layout.service';
+import { AuthService } from '@/core/services/auth.service';
+import { User } from '@/core/models/user.model';
 
 @Component({
     selector: '[app-profilesidebar]',
@@ -10,6 +13,7 @@ import { LayoutService } from '@/layout/service/layout.service';
         ButtonModule,
         DrawerModule,
         BadgeModule,
+        AsyncPipe,
     ],
     template: `
         <p-drawer
@@ -21,10 +25,11 @@ import { LayoutService } from '@/layout/service/layout.service';
         >
             <div class="flex flex-col mx-auto md:mx-0">
                 <span class="mb-2 font-semibold">Welcome</span>
-                <span
-                    class="text-surface-500 dark:text-surface-400 font-medium mb-8"
-                    >Isabella Andolini</span
-                >
+                @if (authService.currentUser$ | async; as user) {
+                    <span class="text-surface-500 dark:text-surface-400 font-medium mb-8">{{ displayName(user) }}</span>
+                } @else {
+                    <span class="text-surface-500 dark:text-surface-400 font-medium mb-8">Guest</span>
+                }
 
                 <ul class="list-none m-0 p-0">
                     <li>
@@ -82,6 +87,9 @@ import { LayoutService } from '@/layout/service/layout.service';
                     </li>
                     <li>
                         <a
+                            tabindex="0"
+                            (click)="logout(); $event.preventDefault()"
+                            (keydown.enter)="logout()"
                             class="cursor-pointer flex mb-4 p-4 items-center border border-surface-200 dark:border-surface-700 rounded hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-150"
                         >
                             <span>
@@ -94,7 +102,7 @@ import { LayoutService } from '@/layout/service/layout.service';
                                 <p
                                     class="text-surface-500 dark:text-surface-400 m-0"
                                 >
-                                    Sed ut perspiciatis
+                                    End your portal session
                                 </p>
                             </div>
                         </a>
@@ -260,11 +268,25 @@ import { LayoutService } from '@/layout/service/layout.service';
     `,
 })
 export class AppProfileSidebar {
-    constructor(public layoutService: LayoutService) {}
+    readonly layoutService = inject(LayoutService);
+    readonly authService = inject(AuthService);
 
     visible = computed(
         () => this.layoutService.layoutState().profileSidebarVisible,
     );
+
+    displayName(user: User | null): string {
+        if (!user) {
+            return 'Guest';
+        }
+        const name = `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim();
+        return name || user.email;
+    }
+
+    logout(): void {
+        this.authService.logout();
+        this.onDrawerHide();
+    }
 
     onDrawerHide() {
         this.layoutService.layoutState.update((state) => ({
