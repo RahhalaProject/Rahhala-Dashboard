@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Table, TableModule } from 'primeng/table';
+import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -13,6 +13,7 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { OrderService } from '@/core/services/order.service';
 import { MyOrderResponse } from '@/core/models/my-order.model';
+import { PortalOrderDetailsDialog } from '@/pages/portal/portal-order-details-dialog';
 
 interface StatusOption {
     label: string;
@@ -34,15 +35,17 @@ interface StatusOption {
         TagModule,
         ToastModule,
         RippleModule,
+        PortalOrderDetailsDialog,
     ],
     providers: [MessageService],
     template: `
         <p-toast />
+        <app-portal-order-details-dialog [(visible)]="orderDetailsOpen" [orderId]="orderDetailsId" />
         <div class="card">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
                 <div>
                     <div class="text-2xl font-semibold text-surface-900 dark:text-surface-0">My orders</div>
-                    <p class="text-surface-600 dark:text-surface-200 m-0">Same API as Rahhala-Site my-orders.</p>
+                    <p class="text-surface-600 dark:text-surface-200 m-0">GET /api/v1/OrderManagement with pagination.</p>
                 </div>
                 <div class="flex flex-col sm:flex-row gap-2 sm:items-center">
                     <label class="text-sm font-medium text-surface-700 dark:text-surface-100 whitespace-nowrap"
@@ -64,9 +67,13 @@ interface StatusOption {
                 #dt
                 [value]="orders"
                 [loading]="loading"
+                [lazy]="true"
+                (onLazyLoad)="onLazyLoad($event)"
                 [paginator]="true"
                 paginatorDropdownAppendTo="body"
-                [rows]="10"
+                [rows]="tableRows"
+                [first]="tableFirst"
+                [totalRecords]="totalRecords"
                 [showCurrentPageReport]="true"
                 responsiveLayout="scroll"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
@@ -128,6 +135,7 @@ interface StatusOption {
                         <th pSortableColumn="statusId" class="white-space-nowrap">
                             <span class="flex items-center gap-2">Status <p-sortIcon field="statusId" /></span>
                         </th>
+                        <th class="white-space-nowrap w-20 text-center">View</th>
                     </tr>
                 </ng-template>
                 <ng-template #body let-row>
@@ -143,24 +151,43 @@ interface StatusOption {
                         <td>
                             <p-tag [value]="row.statusLabel" [severity]="statusSeverity(row.statusId)"></p-tag>
                         </td>
+                        <td class="text-center">
+                            <button
+                                type="button"
+                                pButton
+                                pRipple
+                                icon="pi pi-eye"
+                                [rounded]="true"
+                                [text]="true"
+                                severity="secondary"
+                                (click)="openOrderDetails(row)"
+                                [attr.aria-label]="'View details for order ' + (row.orderNumber || row.orderId)"
+                            ></button>
+                        </td>
                     </tr>
                 </ng-template>
                 <ng-template #emptymessage>
                     <tr>
-                        <td colspan="7" class="text-center py-6 text-surface-500">No orders found.</td>
+                        <td colspan="8" class="text-center py-6 text-surface-500">No orders found.</td>
                     </tr>
                 </ng-template>
             </p-table>
         </div>
     `,
 })
-export class PortalOrders implements OnInit {
+export class PortalOrders {
     private readonly orderService = inject(OrderService);
     private readonly messageService = inject(MessageService);
 
     orders: (MyOrderResponse & { statusLabel: string })[] = [];
     loading = false;
+    totalRecords = 0;
+    tableFirst = 0;
+    tableRows = 10;
     selectedOrderStatus: number | null = null;
+
+    orderDetailsOpen = false;
+    orderDetailsId: string | null = null;
 
     readonly statusOptions: StatusOption[] = [
         { label: 'All statuses', value: null },
@@ -172,21 +199,31 @@ export class PortalOrders implements OnInit {
         { label: 'Status 6', value: 6 },
     ];
 
-    ngOnInit(): void {
-        this.loadOrders();
+    onLazyLoad(event: TableLazyLoadEvent): void {
+        this.tableFirst = event.first ?? 0;
+        const rows = event.rows;
+        this.tableRows = rows != null && rows > 0 ? rows : 10;
+        this.fetchOrders();
     }
 
     onStatusFilterChange(value: number | null): void {
         this.selectedOrderStatus = value;
-        this.loadOrders();
+        this.tableFirst = 0;
+        this.fetchOrders();
     }
 
     loadOrders(): void {
+        this.fetchOrders();
+    }
+
+    private fetchOrders(): void {
         this.loading = true;
-        this.orderService.getMyOrders(this.selectedOrderStatus ?? undefined).subscribe({
-            next: (data) => {
-                const list = data ?? [];
-                this.orders = list.map((o) => ({
+        const page = Math.floor(this.tableFirst / this.tableRows) + 1;
+        const limit = this.tableRows;
+        this.orderService.getOrderManagement(page, limit, this.selectedOrderStatus ?? undefined).subscribe({
+            next: ({ items, totalRecords }) => {
+                this.totalRecords = totalRecords;
+                this.orders = (items ?? []).map((o) => ({
                     ...o,
                     orderTypeName: o.orderTypeName?.trim() || `Type ${o.orderType}`,
                     statusLabel: this.statusLabel(o.statusId),
@@ -196,6 +233,7 @@ export class PortalOrders implements OnInit {
             error: () => {
                 this.loading = false;
                 this.orders = [];
+                this.totalRecords = 0;
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error',
@@ -207,6 +245,11 @@ export class PortalOrders implements OnInit {
 
     onGlobalFilter(table: Table, event: Event): void {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+    }
+
+    openOrderDetails(row: MyOrderResponse & { statusLabel: string }): void {
+        this.orderDetailsId = row.orderId;
+        this.orderDetailsOpen = true;
     }
 
     statusLabel(id: number): string {

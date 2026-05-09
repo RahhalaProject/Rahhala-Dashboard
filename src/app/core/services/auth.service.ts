@@ -1,27 +1,24 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import {
-    BehaviorSubject,
-    Observable,
-    catchError,
-    of,
-    switchMap,
-    tap,
-    throwError,
-} from 'rxjs';
+import { BehaviorSubject, Observable, catchError, tap, throwError } from 'rxjs';
 import { APP_CONFIG, AppConfig } from '../config/app.config';
 import { TokenService } from './token.service';
 import { LoginResponse } from '../models/login-response.model';
 import { User } from '../models/user.model';
-import { VerifyOtpRequest } from '../models/verify-otp-request.model';
 import { RefreshTokenRequest } from '../models/refresh-token-request.model';
 
-/** Matches Rahhala-Site sign-in payload for `SendLoginOtp`. */
-export interface SendLoginOtpPayload {
-    phoneNumber: string;
+/** Matches `POST /v1/AuthenticationManagement/login`. */
+export interface LoginCredentials {
+    email: string;
     password: string;
 }
+
+// /** Matches Rahhala-Site sign-in payload for `SendLoginOtp`. */
+// export interface SendLoginOtpPayload {
+//     phoneNumber: string;
+//     password: string;
+// }
 
 @Injectable({
     providedIn: 'root',
@@ -42,35 +39,48 @@ export class AuthService {
         return this.currentUserSubject.value;
     }
 
-    SendLoginOtp(payload: SendLoginOtpPayload): Observable<LoginResponse> {
+    login(credentials: LoginCredentials): Observable<LoginResponse> {
         return this.http
-            .post<LoginResponse>(`${this.apiUrl}/v1/Otp/send-login-otp`, {
-                ...payload,
-                userType: 1,
-            })
+            .post<LoginResponse>(`${this.apiUrl}/v1/AuthenticationManagement/login`, credentials)
             .pipe(
+                tap((response) => this.handleAuthResponse(response)),
                 catchError((error) => {
-                    console.error('Send login OTP error:', error);
+                    console.error('Login error:', error);
                     return throwError(() => error);
                 }),
             );
     }
 
-    VerifyLoginOtp(request: VerifyOtpRequest): Observable<LoginResponse> {
-        return this.withFcmToken(request).pipe(
-            switchMap((body) =>
-                this.http.post<LoginResponse>(`${this.apiUrl}/v1/Authentication/login`, {
-                    ...body,
-                    userType: 1,
-                }),
-            ),
-            tap((response) => this.handleAuthResponse(response)),
-            catchError((error) => {
-                console.error('OTP verification error:', error);
-                return throwError(() => error);
-            }),
-        );
-    }
+    // OTP flow disabled — use `login()` only. Re-enable route `auth/login-otp` if needed.
+    // SendLoginOtp(payload: SendLoginOtpPayload): Observable<LoginResponse> {
+    //     return this.http
+    //         .post<LoginResponse>(`${this.apiUrl}/v1/Otp/send-login-otp`, {
+    //             ...payload,
+    //             userType: 1,
+    //         })
+    //         .pipe(
+    //             catchError((error) => {
+    //                 console.error('Send login OTP error:', error);
+    //                 return throwError(() => error);
+    //             }),
+    //         );
+    // }
+
+    // VerifyLoginOtp(request: VerifyOtpRequest): Observable<LoginResponse> {
+    //     return this.withFcmToken(request).pipe(
+    //         switchMap((body) =>
+    //             this.http.post<LoginResponse>(`${this.apiUrl}/v1/Authentication/login`, {
+    //                 ...body,
+    //                 userType: 1,
+    //             }),
+    //         ),
+    //         tap((response) => this.handleAuthResponse(response)),
+    //         catchError((error) => {
+    //             console.error('OTP verification error:', error);
+    //             return throwError(() => error);
+    //         }),
+    //     );
+    // }
 
     refreshToken(): Observable<LoginResponse> {
         const refreshToken = this.tokenService.getRefreshToken();
@@ -129,9 +139,5 @@ export class AuthService {
         this.currentUserSubject.next(null);
         this.isAuthenticated.set(false);
         void this.router.navigate(['/auth/login']);
-    }
-
-    private withFcmToken<T extends { fcmToken?: string | null }>(request: T): Observable<T> {
-        return of({ ...request, fcmToken: null });
     }
 }

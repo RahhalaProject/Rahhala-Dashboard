@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { Access } from './access';
 import { Login } from './login';
-import { LoginOtp } from './login-otp';
+// import { LoginOtp } from './login-otp';
 import { Error } from './error';
 import { Register } from './register';
 import { ForgotPassword } from './forgotpassword';
@@ -14,7 +14,8 @@ export default [
     { path: 'access', component: Access },
     { path: 'error', component: Error },
     { path: 'login', component: Login, canActivate: [guestGuard] },
-    { path: 'login-otp', component: LoginOtp, canActivate: [guestGuard] },
+    // OTP step disabled — sign-in uses email/password only.
+    // { path: 'login-otp', component: LoginOtp, canActivate: [guestGuard] },
     { path: 'register', component: Register },
     { path: 'forgotpassword', component: ForgotPassword },
     { path: 'newpassword', component: NewPassword },

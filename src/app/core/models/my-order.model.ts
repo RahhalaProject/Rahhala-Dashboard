@@ -1,4 +1,4 @@
-/** GET /api/v1/Order/my-orders */
+/** Order row shape for GET /api/v1/OrderManagement (and similar list endpoints). */
 export interface MyOrderResponse {
     orderId: string;
     orderNumber: string | null;

@@ -10,6 +10,7 @@ function shouldSkipBearer(url: string): boolean {
         u.includes('/auth/login') ||
         u.includes('/auth/register') ||
         u.includes('/refresh-token') ||
+        u.includes('/authenticationmanagement/login') ||
         u.includes('send-login-otp') ||
         u.includes('send-register-otp') ||
         u.includes('forget-password') ||

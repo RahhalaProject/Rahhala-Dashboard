@@ -18,7 +18,9 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
                         errorMessage = error.error?.message ?? 'Bad Request';
                         break;
                     case 401:
-                        errorMessage = 'Unauthorized. Please login again.';
+                        errorMessage = req.url.toLowerCase().includes('/authenticationmanagement/login')
+                            ? 'Invalid email or password.'
+                            : 'Unauthorized. Please login again.';
                         break;
                     case 403:
                         errorMessage = 'Access Denied';

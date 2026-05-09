@@ -143,35 +143,41 @@ export class LoginOtp implements OnInit, OnDestroy {
     }
 
     onSubmit(): void {
-        if (this.form.invalid || !this.phoneNumber()) {
-            this.form.markAllAsTouched();
-            return;
-        }
-        this.isLoading.set(true);
-        this.errorMessage.set('');
-        const otpCode = String(this.form.get('otp')?.value ?? '');
-        this.authService
-            .VerifyLoginOtp({
-                phoneNumber: this.phoneNumber(),
-                otpCode,
-            })
-            .subscribe({
-                next: () => {
-                    this.isLoading.set(false);
-                    void this.router.navigateByUrl(this.returnUrl);
-                },
-                error: (error: { error?: { title?: string }; message?: string }) => {
-                    let msg = 'OTP verification failed. Please try again.';
-                    if (error?.error && typeof error.error === 'object' && error.error.title) {
-                        msg = error.error.title;
-                    } else if (typeof error === 'string') {
-                        msg = error;
-                    } else if (error?.message) {
-                        msg = error.message;
-                    }
-                    this.errorMessage.set(msg);
-                    this.isLoading.set(false);
-                },
-            });
+        // OTP flow removed — `AuthService.VerifyLoginOtp` is disabled. Use `/auth/login` (email + password).
+        this.errorMessage.set('OTP verification is disabled. Please sign in from the login page.');
+        void this.router.navigate(['/auth/login'], {
+            queryParams: { returnUrl: this.returnUrl },
+        });
+        // if (this.form.invalid || !this.phoneNumber()) {
+        //     this.form.markAllAsTouched();
+        //     return;
+        // }
+        // this.isLoading.set(true);
+        // this.errorMessage.set('');
+        // const otpCode = String(this.form.get('otp')?.value ?? '');
+        // this.authService
+        //     .VerifyLoginOtp({
+        //         phoneNumber: this.phoneNumber(),
+        //         otpCode,
+        //     })
+        //     .subscribe({
+        //         next: () => {
+        //             this.isLoading.set(false);
+        //             void this.router.navigateByUrl(this.returnUrl);
+        //         },
+        //         error: (error: { error?: { title?: string }; message?: string }) => {
+        //             let msg = 'OTP verification failed. Please try again.';
+        //             if (error?.error && typeof error.error === 'object' && error.error.title) {
+        //                 msg = error.error.title;
+        //             } else if (typeof error === 'string') {
+        //                 msg = error;
+        //             } else if (error?.message) {
+        //                 msg = error.message;
+        //             }
+        //             this.errorMessage.set(msg);
+        //             this.isLoading.set(false);
+        //         },
+        //     });
     }
 }
+

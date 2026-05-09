@@ -11,7 +11,6 @@ import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
 import { Message } from 'primeng/message';
 import { AuthService } from '@/core/services/auth.service';
-import { saudiPhoneValidator } from '@/shared/validators/saudi-phone';
 
 @Component({
     selector: 'app-login',
@@ -70,24 +69,25 @@ import { saudiPhoneValidator } from '@/shared/validators/saudi-phone';
                     </div>
                 }
                 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex flex-col">
-                    <label for="phoneNumber" class="font-medium text-surface-900 dark:text-surface-0 mb-2">Phone</label>
+                    <label for="email" class="font-medium text-surface-900 dark:text-surface-0 mb-2">Email</label>
                     <p-iconfield class="w-full mb-4">
-                        <p-inputicon class="pi pi-phone" />
+                        <p-inputicon class="pi pi-envelope" />
                         <input
-                            id="phoneNumber"
-                            type="text"
+                            id="email"
+                            type="email"
                             pInputText
                             class="w-full"
-                            placeholder="05xxxxxxxx"
-                            formControlName="phoneNumber"
-                            [class.ng-invalid]="phoneNumber?.invalid && phoneNumber?.touched"
+                            placeholder="you@example.com"
+                            formControlName="email"
+                            autocomplete="username"
+                            [class.ng-invalid]="email?.invalid && email?.touched"
                         />
                     </p-iconfield>
-                    @if (phoneNumber?.errors?.['required'] && phoneNumber?.touched) {
-                        <p-message class="mb-4" severity="error" size="small" variant="simple">Phone is required</p-message>
+                    @if (email?.errors?.['required'] && email?.touched) {
+                        <p-message class="mb-4" severity="error" size="small" variant="simple">Email is required</p-message>
                     }
-                    @if (phoneNumber?.errors?.['saudiPhone'] && phoneNumber?.touched) {
-                        <p-message class="mb-4" severity="error" size="small" variant="simple">Invalid Saudi mobile number</p-message>
+                    @if (email?.errors?.['email'] && email?.touched) {
+                        <p-message class="mb-4" severity="error" size="small" variant="simple">Enter a valid email</p-message>
                     }
 
                     <label for="password" class="font-medium text-surface-900 dark:text-surface-0 mb-2">Password</label>
@@ -105,7 +105,7 @@ import { saudiPhoneValidator } from '@/shared/validators/saudi-phone';
                         pButton
                         pRipple
                         type="submit"
-                        label="Send OTP"
+                        label="Sign in"
                         class="w-full mt-2"
                         [disabled]="isLoading() || loginForm.invalid"
                     ></button>
@@ -129,12 +129,12 @@ export class Login {
     readonly errorMessage = signal('');
 
     readonly loginForm = this.fb.group({
-        phoneNumber: ['', [Validators.required, saudiPhoneValidator()]],
+        email: ['', [Validators.required, Validators.email]],
         password: ['', Validators.required],
     });
 
-    get phoneNumber() {
-        return this.loginForm.get('phoneNumber');
+    get email() {
+        return this.loginForm.get('email');
     }
 
     onSubmit(): void {
@@ -143,34 +143,32 @@ export class Login {
         }
         this.isLoading.set(true);
         this.errorMessage.set('');
-        const returnUrl =
-            this.route.snapshot.queryParamMap.get('returnUrl') || '/home';
+        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/home';
         const raw = this.loginForm.getRawValue();
-        const payload = {
-            phoneNumber: String(raw.phoneNumber ?? ''),
-            password: String(raw.password ?? ''),
-        };
-        this.authService.SendLoginOtp(payload).subscribe({
-            next: () => {
-                this.isLoading.set(false);
-                void this.router.navigate(['/auth/login-otp'], {
-                    state: {
-                        phoneNumber: this.phoneNumber?.value,
-                        returnUrl,
-                    },
-                    queryParams: { returnUrl },
-                });
-            },
-            error: (error: { error?: { title?: string }; message?: string }) => {
-                let friendly = 'Login failed. Please try again.';
-                if (error?.error && typeof error.error === 'object' && error.error.title) {
-                    friendly = error.error.title;
-                } else if (error?.message) {
-                    friendly = error.message;
-                }
-                this.errorMessage.set(friendly);
-                this.isLoading.set(false);
-            },
-        });
+        this.authService
+            .login({
+                email: String(raw.email ?? '').trim(),
+                password: String(raw.password ?? ''),
+            })
+            .subscribe({
+                next: () => {
+                    this.isLoading.set(false);
+                    void this.router.navigateByUrl(returnUrl);
+                },
+                error: (error: { error?: { title?: string; detail?: string }; message?: string }) => {
+                    let friendly = 'Login failed. Please try again.';
+                    if (error?.error && typeof error.error === 'object') {
+                        if (error.error.title) {
+                            friendly = error.error.title;
+                        } else if (error.error.detail) {
+                            friendly = error.error.detail;
+                        }
+                    } else if (error?.message) {
+                        friendly = error.message;
+                    }
+                    this.errorMessage.set(friendly);
+                    this.isLoading.set(false);
+                },
+            });
     }
 }
