@@ -18,7 +18,7 @@ export const appRoutes: Routes = [
             {
                 path: 'home',
                 loadComponent: () => import('./app/pages/dashboards/ecommercedashboard').then((c) => c.EcommerceDashboard),
-                data: { breadcrumb: 'Home' },
+                data: { breadcrumbKey: 'portal.breadcrumb.home' },
             },
             {
                 path: 'dashboard-ecommerce',
@@ -28,7 +28,7 @@ export const appRoutes: Routes = [
             {
                 path: 'orders',
                 loadComponent: () => import('./app/pages/portal/portal-orders').then((c) => c.PortalOrders),
-                data: { breadcrumb: 'My Orders' },
+                data: { breadcrumbKey: 'portal.breadcrumb.orders' },
             },
         ],
     },

@@ -1,4 +1,5 @@
-import { Injectable, effect, signal, computed } from '@angular/core';
+import { Injectable, effect, inject, signal, computed, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Subject } from 'rxjs';
 
 export type ColorScheme = 'light' | 'dark' | 'dim';
@@ -13,6 +14,60 @@ export interface layoutConfig {
     menuMode?: string;
     menuTheme?: string;
     colorScheme?: ColorScheme;
+}
+
+const LAYOUT_CONFIG_STORAGE_KEY = 'rahala_portal_layout_config';
+
+const DEFAULT_LAYOUT_CONFIG: layoutConfig = {
+    ripple: false,
+    preset: 'Aura',
+    primary: 'indigo',
+    inputStyle: 'outlined',
+    surface: null,
+    darkTheme: false,
+    menuMode: 'static',
+    menuTheme: 'colorScheme',
+};
+
+const ALLOWED_PRESETS = new Set(['Aura', 'Lara', 'Nora']);
+const ALLOWED_MENU_MODES = new Set(['static', 'overlay', 'slim', 'slim-plus', 'reveal', 'drawer', 'horizontal']);
+const ALLOWED_MENU_THEMES = new Set(['colorScheme', 'primaryColor', 'transparent']);
+const ALLOWED_COLOR_SCHEMES = new Set<ColorScheme>(['light', 'dark', 'dim']);
+
+function sanitizeLayoutConfigPatch(parsed: Partial<layoutConfig>): Partial<layoutConfig> {
+    const out: Partial<layoutConfig> = {};
+    if (parsed.preset != null && ALLOWED_PRESETS.has(String(parsed.preset))) {
+        out.preset = parsed.preset;
+    }
+    if (typeof parsed.primary === 'string' && parsed.primary.trim()) {
+        out.primary = parsed.primary.trim();
+    }
+    if ('surface' in parsed) {
+        if (parsed.surface === null) {
+            out.surface = null;
+        } else if (typeof parsed.surface === 'string' && /^[a-z0-9-]+$/i.test(parsed.surface)) {
+            out.surface = parsed.surface;
+        }
+    }
+    if (typeof parsed.darkTheme === 'boolean') {
+        out.darkTheme = parsed.darkTheme;
+    }
+    if (parsed.menuMode != null && ALLOWED_MENU_MODES.has(String(parsed.menuMode))) {
+        out.menuMode = parsed.menuMode;
+    }
+    if (parsed.menuTheme != null && ALLOWED_MENU_THEMES.has(String(parsed.menuTheme))) {
+        out.menuTheme = parsed.menuTheme;
+    }
+    if (typeof parsed.ripple === 'boolean') {
+        out.ripple = parsed.ripple;
+    }
+    if (typeof parsed.inputStyle === 'string' && parsed.inputStyle.trim()) {
+        out.inputStyle = parsed.inputStyle.trim();
+    }
+    if (parsed.colorScheme != null && ALLOWED_COLOR_SCHEMES.has(parsed.colorScheme as ColorScheme)) {
+        out.colorScheme = parsed.colorScheme;
+    }
+    return out;
 }
 
 interface LayoutState {
@@ -37,16 +92,9 @@ interface MenuChangeEvent {
     providedIn: 'root',
 })
 export class LayoutService {
-    _config: layoutConfig = {
-        ripple: false,
-        preset: 'Aura',
-        primary: 'indigo',
-        inputStyle: 'outlined',
-        surface: null,
-        darkTheme: false,
-        menuMode: 'static',
-        menuTheme: 'colorScheme',
-    };
+    private readonly platformId = inject(PLATFORM_ID);
+
+    _config: layoutConfig = { ...DEFAULT_LAYOUT_CONFIG };
 
     _state: LayoutState = {
         staticMenuDesktopInactive: false,
@@ -61,7 +109,7 @@ export class LayoutService {
         activeMenuItem: null,
     };
 
-    layoutConfig = signal<layoutConfig>(this._config);
+    layoutConfig = signal<layoutConfig>(this.createInitialLayoutConfig());
 
     layoutState = signal<LayoutState>(this._state);
 
@@ -104,6 +152,10 @@ export class LayoutService {
     private initialized = false;
 
     constructor() {
+        if (isPlatformBrowser(this.platformId)) {
+            this.toggleDarkMode(this.layoutConfig());
+        }
+
         effect(() => {
             const config = this.layoutConfig();
             if (config) {
@@ -125,6 +177,33 @@ export class LayoutService {
         effect(() => {
             this.isSidebarStateChanged() && this.reset();
         });
+    }
+
+    private createInitialLayoutConfig(): layoutConfig {
+        if (!isPlatformBrowser(this.platformId)) {
+            return { ...DEFAULT_LAYOUT_CONFIG };
+        }
+        try {
+            const raw = localStorage.getItem(LAYOUT_CONFIG_STORAGE_KEY);
+            if (!raw) {
+                return { ...DEFAULT_LAYOUT_CONFIG };
+            }
+            const parsed = JSON.parse(raw) as Partial<layoutConfig>;
+            return { ...DEFAULT_LAYOUT_CONFIG, ...sanitizeLayoutConfigPatch(parsed) };
+        } catch {
+            return { ...DEFAULT_LAYOUT_CONFIG };
+        }
+    }
+
+    private persistLayoutConfig(config: layoutConfig): void {
+        if (!isPlatformBrowser(this.platformId)) {
+            return;
+        }
+        try {
+            localStorage.setItem(LAYOUT_CONFIG_STORAGE_KEY, JSON.stringify(config));
+        } catch {
+            /* quota or private mode */
+        }
     }
 
     private handleDarkModeTransition(config: layoutConfig): void {
@@ -186,8 +265,10 @@ export class LayoutService {
         }
     }
     onConfigUpdate() {
-        this._config = { ...this.layoutConfig() };
-        this.configUpdate.next(this.layoutConfig());
+        const config = this.layoutConfig();
+        this._config = { ...config };
+        this.configUpdate.next(config);
+        this.persistLayoutConfig(config);
     }
 
     onMenuStateChange(event: MenuChangeEvent) {

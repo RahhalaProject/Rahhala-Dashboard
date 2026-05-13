@@ -7,4 +7,7 @@ export interface LoginResponse {
     refreshToken: string;
     accessTokenExpiration?: string | Date;
     roles: string[];
+    phoneNumber?: string | null;
+    profilePictureUrl?: string | null;
+    address?: string | null;
 }

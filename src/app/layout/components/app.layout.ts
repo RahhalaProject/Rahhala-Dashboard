@@ -1,4 +1,4 @@
-import { Component, Renderer2, ViewChild } from '@angular/core';
+import { Component, Renderer2, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
@@ -7,6 +7,9 @@ import { AppSidebar } from './app.sidebar';
 import { LayoutService } from '@/layout/service/layout.service';
 import { AppConfigurator } from './app.configurator';
 import { AppProfileSidebar } from './app.profilesidebar';
+import { ToastModule } from 'primeng/toast';
+import { AuthService } from '@/core/services/auth.service';
+import { UserProfileService } from '@/core/services/user-profile.service';
 
 @Component({
     selector: 'app-layout',
@@ -18,19 +21,21 @@ import { AppProfileSidebar } from './app.profilesidebar';
         RouterModule,
         AppConfigurator,
         AppProfileSidebar,
+        ToastModule,
     ],
-    template: `<div class="layout-container" [ngClass]="containerClass">
-        <div app-sidebar></div>
-        <div class="layout-content-wrapper">
-            <div app-topbar></div>
-            <div class="layout-content">
-                <router-outlet></router-outlet>
+    template: `<p-toast />
+        <div class="layout-container" [ngClass]="containerClass">
+            <div app-sidebar></div>
+            <div class="layout-content-wrapper">
+                <div app-topbar></div>
+                <div class="layout-content">
+                    <router-outlet></router-outlet>
+                </div>
             </div>
-        </div>
-        <div app-profilesidebar></div>
-        <app-configurator></app-configurator>
-        <div class="layout-mask animate-fadein"></div>
-    </div> `,
+            <div app-profilesidebar></div>
+            <app-configurator></app-configurator>
+            <div class="layout-mask animate-fadein"></div>
+        </div> `,
 })
 export class AppLayout {
     overlayMenuOpenSubscription: Subscription;
@@ -71,6 +76,26 @@ export class AppLayout {
         this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
             this.hideMenu();
         });
+
+        const auth = inject(AuthService);
+        const userProfile = inject(UserProfileService);
+        if (auth.isLoggedIn()) {
+            userProfile.getMyProfile().subscribe({
+                next: (p) =>
+                    auth.applyProfileToCurrentUser({
+                        id: p.id,
+                        firstName: p.firstName,
+                        lastName: p.lastName,
+                        email: p.email,
+                        phoneNumber: p.phoneNumber,
+                        profilePictureUrl: p.profilePictureUrl,
+                        address: p.address ?? undefined,
+                    }),
+                error: () => {
+                    /* login user may lack permission; keep session user as-is */
+                },
+            });
+        }
     }
 
     isOutsideClicked(event: any) {

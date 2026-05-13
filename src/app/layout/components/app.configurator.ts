@@ -1,5 +1,5 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { booleanAttribute, Component, computed, inject, Input, model, OnInit, PLATFORM_ID, Signal } from '@angular/core';
+import { booleanAttribute, Component, computed, inject, Input, model, OnDestroy, OnInit, PLATFORM_ID, Signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { $t, updatePreset, updateSurfacePalette } from '@primeuix/themes';
 import Aura from '@primeuix/themes/aura';
@@ -12,6 +12,8 @@ import { Router } from '@angular/router';
 import { DrawerModule } from 'primeng/drawer';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 
 const presets = {
     Aura,
@@ -42,15 +44,15 @@ declare type SurfacesType = {
 @Component({
     selector: 'app-configurator',
     standalone: true,
-    imports: [CommonModule, FormsModule, SelectButtonModule, DrawerModule, ToggleSwitchModule, RadioButtonModule],
+    imports: [CommonModule, FormsModule, SelectButtonModule, DrawerModule, ToggleSwitchModule, RadioButtonModule, TranslateModule],
     template: `
         <button *ngIf="simple" class="layout-config-button config-link" type="button" (click)="toggleConfigSidebar()">
             <i class="pi pi-cog"></i>
         </button>
-        <p-drawer [visible]="visible()" (onHide)="onDrawerHide()" position="right" [transitionOptions]="'.3s cubic-bezier(0, 0, 0.2, 1)'" styleClass="layout-config-sidebar w-80" header="Settings">
+        <p-drawer [visible]="visible()" (onHide)="onDrawerHide()" position="right" [transitionOptions]="'.3s cubic-bezier(0, 0, 0.2, 1)'" styleClass="layout-config-sidebar w-80" [header]="'portal.configurator.settings' | translate">
             <div class="flex flex-col gap-4">
                 <div>
-                    <span class="text-lg font-semibold">Primary</span>
+                    <span class="text-lg font-semibold">{{ 'portal.configurator.primary' | translate }}</span>
                     <div class="pt-2 flex gap-2 flex-wrap">
                         @for (primaryColor of primaryColors(); track primaryColor.name) {
                             <button
@@ -71,7 +73,7 @@ declare type SurfacesType = {
                 </div>
 
                 <div>
-                    <span class="text-lg font-semibold">Surface</span>
+                    <span class="text-lg font-semibold">{{ 'portal.configurator.surface' | translate }}</span>
                     <div class="pt-2 flex gap-2 flex-wrap">
                         @for (surface of surfaces; track surface.name) {
                             <button
@@ -91,71 +93,71 @@ declare type SurfacesType = {
                 </div>
 
                 <div class="flex flex-col gap-2">
-                    <span class="text-lg font-semibold">Presets</span>
+                    <span class="text-lg font-semibold">{{ 'portal.configurator.presets' | translate }}</span>
                     <p-selectbutton [options]="presets" [ngModel]="selectedPreset()" (ngModelChange)="onPresetChange($event)" [allowEmpty]="false"></p-selectbutton>
                 </div>
 
                 <div class="flex flex-col gap-2">
-                    <span class="text-lg font-semibold">Color Scheme</span>
+                    <span class="text-lg font-semibold">{{ 'portal.configurator.colorScheme' | translate }}</span>
                     <p-selectbutton [ngModel]="darkTheme()" (ngModelChange)="toggleDarkMode()" [options]="themeOptions" optionLabel="name" optionValue="value" [allowEmpty]="false"></p-selectbutton>
                 </div>
 
                 <div *ngIf="!simple" class="flex flex-col gap-2">
-                    <span class="text-lg font-semibold">Menu Type</span>
+                    <span class="text-lg font-semibold">{{ 'portal.configurator.menuType' | translate }}</span>
                     <div class="flex flex-wrap flex-col gap-3">
                         <div class="flex">
                             <div class="flex items-center gap-2 w-1/2">
                                 <p-radio-button name="menuMode" value="static" [(ngModel)]="menuMode" (ngModelChange)="setMenuMode('static')" inputId="static"></p-radio-button>
-                                <label for="static">Static</label>
+                                <label for="static">{{ 'portal.configurator.static' | translate }}</label>
                             </div>
 
                             <div class="flex items-center gap-2 w-1/2">
                                 <p-radio-button name="menuMode" value="overlay" [(ngModel)]="menuMode" (ngModelChange)="setMenuMode('overlay')" inputId="overlay"></p-radio-button>
-                                <label for="overlay">Overlay</label>
+                                <label for="overlay">{{ 'portal.configurator.overlay' | translate }}</label>
                             </div>
                         </div>
                         <div class="flex">
                             <div class="flex items-center gap-2 w-1/2">
                                 <p-radio-button name="menuMode" value="slim" [(ngModel)]="menuMode" (ngModelChange)="setMenuMode('slim')" inputId="slim"></p-radio-button>
-                                <label for="slim">Slim</label>
+                                <label for="slim">{{ 'portal.configurator.slim' | translate }}</label>
                             </div>
                             <div class="flex items-center gap-2 w-1/2">
                                 <p-radio-button name="menuMode" value="slim-plus" [(ngModel)]="menuMode" (ngModelChange)="setMenuMode('slim-plus')" inputId="slim-plus"></p-radio-button>
-                                <label for="slim-plus">Slim+</label>
+                                <label for="slim-plus">{{ 'portal.configurator.slimPlus' | translate }}</label>
                             </div>
                         </div>
                         <div class="flex">
                             <div class="flex items-center gap-2 w-1/2">
                                 <p-radio-button name="menuMode" value="reveal" [(ngModel)]="menuMode" (ngModelChange)="setMenuMode('reveal')" inputId="reveal"></p-radio-button>
-                                <label for="reveal">Reveal</label>
+                                <label for="reveal">{{ 'portal.configurator.reveal' | translate }}</label>
                             </div>
                             <div class="flex items-center gap-2 w-1/2">
                                 <p-radio-button name="menuMode" value="drawer" [(ngModel)]="menuMode" (ngModelChange)="setMenuMode('drawer')" inputId="drawer"></p-radio-button>
-                                <label for="drawer">Drawer</label>
+                                <label for="drawer">{{ 'portal.configurator.drawer' | translate }}</label>
                             </div>
                         </div>
                         <div class="flex items-center gap-2 w-1/2">
                             <p-radio-button name="menuMode" value="horizontal" [(ngModel)]="menuMode" (ngModelChange)="setMenuMode('horizontal')" inputId="horizontal"></p-radio-button>
-                            <label for="horizontal">Horizontal</label>
+                            <label for="horizontal">{{ 'portal.configurator.horizontal' | translate }}</label>
                         </div>
                     </div>
                 </div>
 
                 <div *ngIf="!simple" class="flex flex-col gap-2">
-                    <span class="text-lg font-semibold">Menu Theme</span>
+                    <span class="text-lg font-semibold">{{ 'portal.configurator.menuTheme' | translate }}</span>
                     <div class="flex flex-wrap flex-col gap-4">
                         <div class="flex items-center gap-2">
                             <p-radiobutton name="menuTheme" value="colorScheme" [ngModel]="menuTheme()" (ngModelChange)="setMenuTheme('colorScheme')" inputId="menutheme-colorscheme"></p-radiobutton>
-                            <label for="scheme">Color Scheme</label>
+                            <label for="menutheme-colorscheme">{{ 'portal.configurator.menuThemeColorScheme' | translate }}</label>
                         </div>
 
                         <div class="flex items-center gap-2">
                             <p-radiobutton name="menuTheme" value="primaryColor" [ngModel]="menuTheme()" (ngModelChange)="setMenuTheme('primaryColor')" inputId="menutheme-primarycolor"></p-radiobutton>
-                            <label for="primary">Primary Color</label>
+                            <label for="menutheme-primarycolor">{{ 'portal.configurator.menuThemePrimaryColor' | translate }}</label>
                         </div>
                         <div class="flex items-center gap-2">
                             <p-radiobutton name="menuTheme" value="transparent" [ngModel]="menuTheme()" (ngModelChange)="setMenuTheme('transparent')" inputId="menutheme-transparent" [disabled]="isTransparentThemeOptionDisabled()"></p-radiobutton>
-                            <label for="transparent">Transparent</label>
+                            <label for="menutheme-transparent">{{ 'portal.configurator.menuThemeTransparent' | translate }}</label>
                         </div>
                     </div>
                 </div>
@@ -163,7 +165,7 @@ declare type SurfacesType = {
         </p-drawer>
     `
 })
-export class AppConfigurator implements OnInit {
+export class AppConfigurator implements OnInit, OnDestroy {
     @Input({ transform: booleanAttribute }) simple: boolean = false;
 
     router = inject(Router);
@@ -176,17 +178,31 @@ export class AppConfigurator implements OnInit {
 
     primeng = inject(PrimeNG);
 
+    private readonly translate = inject(TranslateService);
+
+    private langChangeSub?: Subscription;
+
     presets = Object.keys(presets);
 
-    themeOptions = [
-        { name: 'Light', value: false },
-        { name: 'Dark', value: true }
-    ];
+    themeOptions: { name: string; value: boolean }[] = [];
 
     ngOnInit() {
+        this.refreshThemeOptions();
+        this.langChangeSub = this.translate.onLangChange.subscribe(() => this.refreshThemeOptions());
         if (isPlatformBrowser(this.platformId)) {
             this.onPresetChange(this.layoutService.layoutConfig().preset);
         }
+    }
+
+    ngOnDestroy(): void {
+        this.langChangeSub?.unsubscribe();
+    }
+
+    private refreshThemeOptions(): void {
+        this.themeOptions = [
+            { name: this.translate.instant('portal.configurator.light'), value: false },
+            { name: this.translate.instant('portal.configurator.dark'), value: true },
+        ];
     }
 
     surfaces: SurfacesType[] = [

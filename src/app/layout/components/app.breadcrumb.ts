@@ -6,18 +6,20 @@ import {
     Router,
     RouterModule,
 } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { BehaviorSubject, filter } from 'rxjs';
 
 interface Breadcrumb {
-    label: string;
+    labelKey?: string;
+    label?: string;
     url?: string;
 }
 
 @Component({
     selector: '[app-breadcrumb]',
     standalone: true,
-    imports: [CommonModule, RouterModule],
+    imports: [CommonModule, RouterModule, TranslateModule],
     template: `<nav class="layout-breadcrumb">
         <ol>
             <ng-template
@@ -26,7 +28,7 @@ interface Breadcrumb {
                 let-last="last"
                 [ngForOf]="breadcrumbs$ | async"
             >
-                <li>{{ item.label }}</li>
+                <li>{{ item.labelKey ? (item.labelKey | translate) : item.label }}</li>
                 <li *ngIf="!last" class="layout-breadcrumb-chevron">/</li>
             </ng-template>
         </ol>
@@ -40,7 +42,7 @@ export class AppBreadcrumb {
     constructor(private router: Router) {
         this.router.events
             .pipe(filter((event) => event instanceof NavigationEnd))
-            .subscribe((event) => {
+            .subscribe(() => {
                 const root = this.router.routerState.snapshot.root;
                 const breadcrumbs: Breadcrumb[] = [];
                 this.addBreadcrumb(root, [], breadcrumbs);
@@ -55,15 +57,18 @@ export class AppBreadcrumb {
         breadcrumbs: Breadcrumb[],
     ) {
         const routeUrl = parentUrl.concat(route.url.map((url) => url.path));
-        const breadcrumb = route.data['breadcrumb'];
-        const parentBreadcrumb =
-            route.parent && route.parent.data
-                ? route.parent.data['breadcrumb']
-                : null;
+        const breadcrumbKey = route.data['breadcrumbKey'] as string | undefined;
+        const breadcrumb = route.data['breadcrumb'] as string | undefined;
+        const parentBreadcrumbKey = route.parent?.data?.['breadcrumbKey'] as string | undefined;
+        const parentBreadcrumb = route.parent?.data?.['breadcrumb'] as string | undefined;
 
-        if (breadcrumb && breadcrumb !== parentBreadcrumb) {
+        const crumbId = breadcrumbKey ?? breadcrumb;
+        const parentCrumbId = parentBreadcrumbKey ?? parentBreadcrumb;
+
+        if (crumbId && crumbId !== parentCrumbId) {
             breadcrumbs.push({
-                label: route.data['breadcrumb'],
+                labelKey: breadcrumbKey,
+                label: breadcrumbKey ? undefined : breadcrumb,
                 url: '/' + routeUrl.join('/'),
             });
         }

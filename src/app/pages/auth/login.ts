@@ -11,12 +11,16 @@ import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
 import { Message } from 'primeng/message';
 import { AuthService } from '@/core/services/auth.service';
+import { extractApiError } from '@/shared/utils/api-error';
+import { LanguageService } from '@/core/services/language.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-login',
     standalone: true,
     imports: [
         RouterModule,
+        TranslateModule,
         AppConfigurator,
         IconFieldModule,
         InputIconModule,
@@ -56,12 +60,24 @@ import { AuthService } from '@/core/services/auth.service';
                 d="M1397.5 154.8c47.2-10.6 93.6-25.3 138.6-43.8c21.7-8.9 43-18.8 63.9-29.5V0H643.4c62.9 41.7 129.7 78.2 202.1 107.4C1020.4 178.1 1214.2 196.1 1397.5 154.8z"
             />
         </svg>
+        <div class="login-chrome-actions fixed top-4 end-4 z-20 flex items-center gap-2">
+            <p-button
+                styleClass="header-lang-toggle"
+                icon="pi pi-globe"
+                [label]="language.currentLangCode()"
+                size="small"
+                [outlined]="true"
+                [attr.aria-label]="'portal.layout.languageAria' | translate"
+                (onClick)="language.toggle()"
+            ></p-button>
+            <app-configurator [simple]="true" />
+        </div>
         <div class="px-8 min-h-screen flex justify-center items-center">
             <div
                 class="border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded py-16 px-6 md:px-16 z-10 w-full max-w-md"
             >
                 <div class="mb-6">
-                    <div class="text-surface-900 dark:text-surface-0 text-xl font-bold mb-2">Rahhala login</div>
+                    <div class="text-surface-900 dark:text-surface-0 text-xl font-bold mb-2">{{ 'portal.login.title' | translate }}</div>
                 </div>
                 @if (errorMessage()) {
                     <div class="mb-4">
@@ -69,7 +85,7 @@ import { AuthService } from '@/core/services/auth.service';
                     </div>
                 }
                 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex flex-col">
-                    <label for="email" class="font-medium text-surface-900 dark:text-surface-0 mb-2">Email</label>
+                    <label for="email" class="font-medium text-surface-900 dark:text-surface-0 mb-2">{{ 'email' | translate }}</label>
                     <p-iconfield class="w-full mb-4">
                         <p-inputicon class="pi pi-envelope" />
                         <input
@@ -77,20 +93,20 @@ import { AuthService } from '@/core/services/auth.service';
                             type="email"
                             pInputText
                             class="w-full"
-                            placeholder="you@example.com"
+                            [placeholder]="'portal.login.placeholderEmail' | translate"
                             formControlName="email"
                             autocomplete="username"
                             [class.ng-invalid]="email?.invalid && email?.touched"
                         />
                     </p-iconfield>
                     @if (email?.errors?.['required'] && email?.touched) {
-                        <p-message class="mb-4" severity="error" size="small" variant="simple">Email is required</p-message>
+                        <p-message class="mb-4" severity="error" size="small" variant="simple">{{ 'portal.login.emailRequired' | translate }}</p-message>
                     }
                     @if (email?.errors?.['email'] && email?.touched) {
-                        <p-message class="mb-4" severity="error" size="small" variant="simple">Enter a valid email</p-message>
+                        <p-message class="mb-4" severity="error" size="small" variant="simple">{{ 'portal.login.emailInvalid' | translate }}</p-message>
                     }
 
-                    <label for="password" class="font-medium text-surface-900 dark:text-surface-0 mb-2">Password</label>
+                    <label for="password" class="font-medium text-surface-900 dark:text-surface-0 mb-2">{{ 'password' | translate }}</label>
                     <p-password
                         id="password"
                         formControlName="password"
@@ -98,22 +114,20 @@ import { AuthService } from '@/core/services/auth.service';
                         [feedback]="false"
                         styleClass="w-full mb-4"
                         inputStyleClass="w-full"
-                        placeholder="Password"
+                        [placeholder]="'password' | translate"
                     />
 
                     <button
                         pButton
                         pRipple
                         type="submit"
-                        label="Sign in"
+                        [label]="'signIn' | translate"
                         class="w-full mt-2"
                         [disabled]="isLoading() || loginForm.invalid"
                     ></button>
                 </form>
             </div>
         </div>
-
-        <app-configurator [simple]="true" />
     `,
 })
 export class Login {
@@ -122,6 +136,8 @@ export class Login {
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
     readonly layoutService = inject(LayoutService);
+    readonly language = inject(LanguageService);
+    private readonly translate = inject(TranslateService);
 
     readonly isDarkTheme = computed(() => this.layoutService.isDarkTheme());
 
@@ -155,17 +171,8 @@ export class Login {
                     this.isLoading.set(false);
                     void this.router.navigateByUrl(returnUrl);
                 },
-                error: (error: { error?: { title?: string; detail?: string }; message?: string }) => {
-                    let friendly = 'Login failed. Please try again.';
-                    if (error?.error && typeof error.error === 'object') {
-                        if (error.error.title) {
-                            friendly = error.error.title;
-                        } else if (error.error.detail) {
-                            friendly = error.error.detail;
-                        }
-                    } else if (error?.message) {
-                        friendly = error.message;
-                    }
+                error: (err: unknown) => {
+                    const friendly = extractApiError(err, this.translate.instant('portal.login.loginFailed'));
                     this.errorMessage.set(friendly);
                     this.isLoading.set(false);
                 },

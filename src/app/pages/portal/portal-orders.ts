@@ -44,8 +44,7 @@ interface StatusOption {
         <div class="card">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
                 <div>
-                    <div class="text-2xl font-semibold text-surface-900 dark:text-surface-0">My orders</div>
-                    <p class="text-surface-600 dark:text-surface-200 m-0">GET /api/v1/OrderManagement with pagination.</p>
+                    <div class="text-2xl font-semibold text-surface-900 dark:text-surface-0">Orders</div>
                 </div>
                 <div class="flex flex-col sm:flex-row gap-2 sm:items-center">
                     <label class="text-sm font-medium text-surface-700 dark:text-surface-100 whitespace-nowrap"

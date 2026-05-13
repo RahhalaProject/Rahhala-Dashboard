@@ -16,7 +16,7 @@ import { AuthService } from '@/core/services/auth.service';
                 >. Use the menu to open your orders or dashboards.
             </p>
             <div class="flex flex-wrap gap-2">
-                <button pButton label="My orders" icon="pi pi-shopping-bag" [routerLink]="['/orders']"></button>
+                <button pButton label="Orders" icon="pi pi-shopping-bag" [routerLink]="['/orders']"></button>
                 <button
                     pButton
                     label="E-Commerce dashboard"

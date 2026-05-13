@@ -18,11 +18,29 @@
         align-items: center;
         .app-logo {
             .app-logo-normal {
-                display: inline;
-                width:124px;
-                height:22px;
+                display: inline-block;
+                width: auto;
+                height: 50px;
+                vertical-align: middle;
             }
-    
+
+            img.rahhala-logo.app-logo-normal {
+                width: auto;
+                max-width: 200px;
+                height: 50px;
+                object-fit: contain;
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            img.rahhala-logo.app-logo-small {
+                width: auto;
+                max-width: 52px;
+                height: 44px;
+                object-fit: contain;
+                display: none;
+            }
+
             .app-logo-small {
                 display: none;
             }
@@ -150,4 +168,13 @@
             }
         }
     }
+}
+
+// /icons/AlrahalaLogo.svg uses dark brand fills; on dark + colorScheme sidebars, invert for contrast.
+.layout-container.layout-primarycolor-menu .layout-sidebar .sidebar-header .app-logo img.rahhala-logo {
+    filter: none;
+}
+
+.layout-container.layout-dark.layout-colorscheme-menu .layout-sidebar .sidebar-header .app-logo img.rahhala-logo {
+    filter: brightness(0) invert(1);
 }

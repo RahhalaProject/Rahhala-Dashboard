@@ -128,10 +128,39 @@ export class AuthService {
             firstName: response.firstName,
             lastName: response.lastName,
             roles: response.roles,
+            phoneNumber: response.phoneNumber,
+            profilePictureUrl: response.profilePictureUrl,
+            address: response.address,
         };
         this.tokenService.setUser(user);
         this.currentUserSubject.next(user);
         this.isAuthenticated.set(true);
+    }
+
+    /** Merge server profile into stored user (avatar, names, etc.). */
+    applyProfileToCurrentUser(profile: {
+        id: string;
+        firstName: string;
+        lastName: string;
+        email: string;
+        phoneNumber?: string | null;
+        profilePictureUrl?: string | null;
+        address?: string | null;
+    }): void {
+        const u = this.currentUserValue;
+        if (!u) return;
+        const next: User = {
+            ...u,
+            userId: profile.id || u.userId,
+            firstName: profile.firstName,
+            lastName: profile.lastName,
+            email: profile.email,
+            phoneNumber: profile.phoneNumber ?? u.phoneNumber,
+            profilePictureUrl: profile.profilePictureUrl ?? u.profilePictureUrl,
+            address: profile.address ?? u.address,
+        };
+        this.tokenService.setUser(next);
+        this.currentUserSubject.next(next);
     }
 
     private clearAuthData(): void {

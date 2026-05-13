@@ -2,20 +2,28 @@ import { Component, computed, inject } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { DrawerModule } from 'primeng/drawer';
-import { BadgeModule } from 'primeng/badge';
+import { AvatarModule } from 'primeng/avatar';
 import { LayoutService } from '@/layout/service/layout.service';
 import { AuthService } from '@/core/services/auth.service';
 import { User } from '@/core/models/user.model';
+import { ProfileSettingsDialogComponent } from '@/core/components/profile-settings-dialog/profile-settings-dialog.component';
+import { APP_CONFIG } from '@/core/config/app.config';
+import { resolveProfilePictureUrl } from '@/core/utils/profile-picture-url';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: '[app-profilesidebar]',
+    standalone: true,
     imports: [
         ButtonModule,
         DrawerModule,
-        BadgeModule,
         AsyncPipe,
+        AvatarModule,
+        ProfileSettingsDialogComponent,
+        TranslateModule,
     ],
     template: `
+        <app-profile-settings-dialog [(visible)]="profileSettingsVisible" />
         <p-drawer
             [visible]="visible()"
             (onHide)="onDrawerHide()"
@@ -24,66 +32,38 @@ import { User } from '@/core/models/user.model';
             styleClass="layout-profile-sidebar w-full sm:w-25rem"
         >
             <div class="flex flex-col mx-auto md:mx-0">
-                <span class="mb-2 font-semibold">Welcome</span>
                 @if (authService.currentUser$ | async; as user) {
-                    <span class="text-surface-500 dark:text-surface-400 font-medium mb-8">{{ displayName(user) }}</span>
+                    <div class="flex items-start gap-4 mb-8 pb-6 border-b border-surface-200 dark:border-surface-700">
+                        <p-avatar
+                            [image]="avatarUrl(user)"
+                            [label]="user.profilePictureUrl ? undefined : userInitials(user)"
+                            shape="circle"
+                            [style]="{ width: '3.5rem', height: '3.5rem' }"
+                        />
+                        <div class="flex flex-col gap-0.5 min-w-0">
+                            <span class="font-semibold text-surface-900 dark:text-surface-0 leading-tight">{{ displayName(user) }}</span>
+                            <span class="text-sm text-surface-600 dark:text-surface-400 break-all">{{ user.email }}</span>
+                        </div>
+                    </div>
                 } @else {
-                    <span class="text-surface-500 dark:text-surface-400 font-medium mb-8">Guest</span>
+                    <span class="mb-2 font-semibold">{{ 'portal.profile.welcome' | translate }}</span>
+                    <span class="text-surface-500 dark:text-surface-400 font-medium mb-8">{{ 'portal.profile.guest' | translate }}</span>
                 }
 
                 <ul class="list-none m-0 p-0">
                     <li>
-                        <a
-                            class="cursor-pointer flex mb-4 p-4 items-center border border-surface-200 dark:border-surface-700 rounded hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-150"
-                        >
-                            <span>
-                                <i class="pi pi-user text-xl text-primary"></i>
-                            </span>
-                            <div class="ml-4">
-                                <span class="mb-2 font-semibold">Profile</span>
-                                <p
-                                    class="text-surface-500 dark:text-surface-400 m-0"
-                                >
-                                    Lorem ipsum date visale
-                                </p>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a
-                            class="cursor-pointer flex mb-4 p-4 items-center border border-surface-200 dark:border-surface-700 rounded hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-150"
-                        >
-                            <span>
-                                <i
-                                    class="pi pi-money-bill text-xl text-primary"
-                                ></i>
-                            </span>
-                            <div class="ml-4">
-                                <span class="mb-2 font-semibold">Billing</span>
-                                <p
-                                    class="text-surface-500 dark:text-surface-400 m-0"
-                                >
-                                    Amet mimin mıollit
-                                </p>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a
-                            class="cursor-pointer flex mb-4 p-4 items-center border border-surface-200 dark:border-surface-700 rounded hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-150"
+                        <button
+                            type="button"
+                            (click)="openProfileSettings()"
+                            class="cursor-pointer flex w-full text-left mb-4 p-4 items-center border border-surface-200 dark:border-surface-700 rounded hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-150 bg-transparent border-solid"
                         >
                             <span>
                                 <i class="pi pi-cog text-xl text-primary"></i>
                             </span>
                             <div class="ml-4">
-                                <span class="mb-2 font-semibold">Settings</span>
-                                <p
-                                    class="text-surface-500 dark:text-surface-400 m-0"
-                                >
-                                    Exercitation veniam
-                                </p>
+                                <span class="mb-2 font-semibold">{{ 'portal.profile.profileSettings' | translate }}</span>
                             </div>
-                        </a>
+                        </button>
                     </li>
                     <li>
                         <a
@@ -93,173 +73,11 @@ import { User } from '@/core/models/user.model';
                             class="cursor-pointer flex mb-4 p-4 items-center border border-surface-200 dark:border-surface-700 rounded hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-150"
                         >
                             <span>
-                                <i
-                                    class="pi pi-power-off text-xl text-primary"
-                                ></i>
+                                <i class="pi pi-power-off text-xl text-primary"></i>
                             </span>
                             <div class="ml-4">
-                                <span class="mb-2 font-semibold">Sign Out</span>
-                                <p
-                                    class="text-surface-500 dark:text-surface-400 m-0"
-                                >
-                                    End your portal session
-                                </p>
+                                <span class="mb-2 font-semibold">{{ 'portal.profile.signOut' | translate }}</span>
                             </div>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="flex flex-col mt-8 mx-auto md:mx-0">
-                <span class="mb-2 font-semibold">Notifications</span>
-                <span
-                    class="text-surface-500 dark:text-surface-400 font-medium mb-8"
-                    >You have 3 notifications</span
-                >
-
-                <ul class="list-none m-0 p-0">
-                    <li>
-                        <a
-                            class="cursor-pointer flex mb-4 p-4 items-center border border-surface-200 dark:border-surface-700 rounded hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-150"
-                        >
-                            <span>
-                                <i
-                                    class="pi pi-comment text-xl text-primary"
-                                ></i>
-                            </span>
-                            <div class="ml-4">
-                                <span class="mb-2 font-semibold"
-                                    >Your post has new comments</span
-                                >
-                                <p
-                                    class="text-surface-500 dark:text-surface-400 m-0"
-                                >
-                                    5 min ago
-                                </p>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a
-                            class="cursor-pointer flex mb-4 p-4 items-center border border-surface-200 dark:border-surface-700 rounded hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-150"
-                        >
-                            <span>
-                                <i class="pi pi-trash text-xl text-primary"></i>
-                            </span>
-                            <div class="ml-4">
-                                <span class="mb-2 font-semibold"
-                                    >Your post has been deleted</span
-                                >
-                                <p
-                                    class="text-surface-500 dark:text-surface-400 m-0"
-                                >
-                                    15min ago
-                                </p>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a
-                            class="cursor-pointer flex mb-4 p-4 items-center border border-surface-200 dark:border-surface-700 rounded hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-150"
-                        >
-                            <span>
-                                <i
-                                    class="pi pi-folder text-xl text-primary"
-                                ></i>
-                            </span>
-                            <div class="ml-4">
-                                <span class="mb-2 font-semibold"
-                                    >Post has been updated</span
-                                >
-                                <p
-                                    class="text-surface-500 dark:text-surface-400 m-0"
-                                >
-                                    3h ago
-                                </p>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="flex flex-col mt-8 mx-auto md:mx-0">
-                <span class="mb-2 font-semibold">Messages</span>
-                <span
-                    class="text-surface-500 dark:text-surface-400 font-medium mb-8"
-                    >You have new messages</span
-                >
-
-                <ul class="list-none m-0 p-0">
-                    <li>
-                        <a
-                            class="cursor-pointer flex mb-4 p-4 items-center border border-surface-200 dark:border-surface-700 rounded hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-150"
-                        >
-                            <span>
-                                <img
-                                    src="/demo/images/avatar/circle/avatar-m-8.png"
-                                    alt="Avatar"
-                                    class="w-8 h-8"
-                                />
-                            </span>
-                            <div class="ml-4">
-                                <span class="mb-2 font-semibold"
-                                    >James Robinson</span
-                                >
-                                <p
-                                    class="text-surface-500 dark:text-surface-400 m-0"
-                                >
-                                    10 min ago
-                                </p>
-                            </div>
-                            <p-badge value="3" class="ml-auto"></p-badge>
-                        </a>
-                    </li>
-                    <li>
-                        <a
-                            class="cursor-pointer flex mb-4 p-4 items-center border border-surface-200 dark:border-surface-700 rounded hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-150"
-                        >
-                            <span>
-                                <img
-                                    src="/demo/images/avatar/circle/avatar-f-8.png"
-                                    alt="Avatar"
-                                    class="w-8 h-8"
-                                />
-                            </span>
-                            <div class="ml-4">
-                                <span class="mb-2 font-semibold"
-                                    >Mary Watson</span
-                                >
-                                <p
-                                    class="text-surface-500 dark:text-surface-400 m-0"
-                                >
-                                    15min ago
-                                </p>
-                            </div>
-                            <p-badge value="1" class="ml-auto"></p-badge>
-                        </a>
-                    </li>
-                    <li>
-                        <a
-                            class="cursor-pointer flex mb-4 p-4 items-center border border-surface-200 dark:border-surface-700 rounded hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-150"
-                        >
-                            <span>
-                                <img
-                                    src="/demo/images/avatar/circle/avatar-f-4.png"
-                                    alt="Avatar"
-                                    class="w-8 h-8"
-                                />
-                            </span>
-                            <div class="ml-4">
-                                <span class="mb-2 font-semibold"
-                                    >Aisha Webb</span
-                                >
-                                <p
-                                    class="text-surface-500 dark:text-surface-400 m-0"
-                                >
-                                    3h ago
-                                </p>
-                            </div>
-                            <p-badge value="2" class="ml-auto"></p-badge>
                         </a>
                     </li>
                 </ul>
@@ -270,17 +88,36 @@ import { User } from '@/core/models/user.model';
 export class AppProfileSidebar {
     readonly layoutService = inject(LayoutService);
     readonly authService = inject(AuthService);
+    private readonly appConfig = inject(APP_CONFIG);
+    private readonly translate = inject(TranslateService);
 
-    visible = computed(
-        () => this.layoutService.layoutState().profileSidebarVisible,
-    );
+    profileSettingsVisible = false;
+
+    visible = computed(() => this.layoutService.layoutState().profileSidebarVisible);
+
+    avatarUrl(user: User | null): string {
+        return resolveProfilePictureUrl(user?.profilePictureUrl, this.appConfig.apiUrl);
+    }
+
+    userInitials(user: User | null): string {
+        if (!user) return '';
+        const first = user.firstName?.charAt(0) ?? '';
+        const last = user.lastName?.charAt(0) ?? '';
+        const pair = `${first}${last}`.trim().toUpperCase();
+        return pair || (user.email?.charAt(0).toUpperCase() ?? '');
+    }
 
     displayName(user: User | null): string {
         if (!user) {
-            return 'Guest';
+            return this.translate.instant('portal.profile.guest');
         }
         const name = `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim();
         return name || user.email;
+    }
+
+    openProfileSettings(): void {
+        this.onDrawerHide();
+        this.profileSettingsVisible = true;
     }
 
     logout(): void {

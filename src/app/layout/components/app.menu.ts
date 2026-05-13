@@ -35,7 +35,7 @@ export class AppMenu {
                         routerLink: ['/home'],
                     },
                     {
-                        label: 'My Orders',
+                        label: 'Orders',
                         icon: 'pi pi-fw pi-shopping-bag',
                         routerLink: ['/orders'],
                     },
