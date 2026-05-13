@@ -30,6 +30,11 @@ export const appRoutes: Routes = [
                 loadComponent: () => import('./app/pages/portal/portal-orders').then((c) => c.PortalOrders),
                 data: { breadcrumbKey: 'portal.breadcrumb.orders' },
             },
+            {
+                path: 'sliders',
+                loadComponent: () => import('./app/pages/portal/portal-sliders').then((c) => c.PortalSlidersComponent),
+                data: { breadcrumbKey: 'portal.breadcrumb.sliders' },
+            },
         ],
     },
     { path: 'landing', component: Landing },

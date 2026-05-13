@@ -39,6 +39,11 @@ export class AppMenu {
                         icon: 'pi pi-fw pi-shopping-bag',
                         routerLink: ['/orders'],
                     },
+                    {
+                        labelKey: 'portal.breadcrumb.sliders',
+                        icon: 'pi pi-fw pi-images',
+                        routerLink: ['/sliders'],
+                    },
                 ],
             },
         ];

@@ -19,3 +19,24 @@ export function resolveProfilePictureUrl(raw: string | null | undefined, apiBase
     if (u.startsWith('/')) return `${origin}${u}`;
     return `${origin}/images/users/${u}`;
 }
+
+/**
+ * Same URL rules as {@link resolveProfilePictureUrl} for values returned from
+ * `FileUpload/single-Image`, but returns an empty string when there is no value
+ * (no placeholder avatar).
+ */
+export function resolveUploadedImageUrl(raw: string | null | undefined, apiBaseUrl: string): string {
+    const u = raw?.trim() ?? '';
+    if (!u) return '';
+    if (/^https?:\/\//i.test(u) || u.startsWith('data:')) return u;
+
+    let origin: string;
+    try {
+        origin = new URL(apiBaseUrl).origin;
+    } catch {
+        return '';
+    }
+
+    if (u.startsWith('/')) return `${origin}${u}`;
+    return `${origin}/images/users/${u}`;
+}
