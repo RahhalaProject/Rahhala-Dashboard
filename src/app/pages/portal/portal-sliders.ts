@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -13,7 +14,6 @@ import { RippleModule } from 'primeng/ripple';
 import { TableModule, Table } from 'primeng/table';
 import { TextareaModule } from 'primeng/textarea';
 import { ToastModule } from 'primeng/toast';
-import { ToolbarModule } from 'primeng/toolbar';
 import { extractApiError } from '@/shared/utils/api-error';
 import { APP_CONFIG, AppConfig } from '@/core/config/app.config';
 import { resolveUploadedImageUrl } from '@/core/utils/profile-picture-url';
@@ -47,7 +47,6 @@ import { SliderService } from '@/core/services/slider.service';
         ButtonModule,
         RippleModule,
         ToastModule,
-        ToolbarModule,
         InputTextModule,
         TextareaModule,
         DialogModule,
@@ -61,72 +60,82 @@ import { SliderService } from '@/core/services/slider.service';
         <p-confirmdialog [style]="{ width: '28rem' }" />
 
         <div class="card">
-            <p-toolbar styleClass="mb-4">
-                <ng-template #start>
-                    <p-button
-                        [label]="'portal.sliders.new' | translate"
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+                <div>
+                    <div class="text-2xl font-semibold text-surface-900 dark:text-surface-0">
+                        {{ 'portal.sliders.title' | translate }}
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button
+                        type="button"
+                        pButton
+                        pRipple
                         icon="pi pi-plus"
+                        [label]="'portal.sliders.new' | translate"
                         severity="secondary"
-                        class="mr-2"
-                        (onClick)="openNew()"
-                    />
-                    <p-button
-                        [label]="'portal.sliders.refresh' | translate"
-                        icon="pi pi-refresh"
-                        severity="secondary"
-                        outlined
-                        [loading]="loading()"
-                        (onClick)="loadSliders()"
-                    />
-                </ng-template>
-            </p-toolbar>
+                        (click)="openNew()"
+                    ></button>
+                </div>
+            </div>
 
             <p-table
                 #dt
                 [value]="sliders()"
+                [loading]="loading()"
                 [rows]="10"
                 [paginator]="true"
+                paginatorDropdownAppendTo="body"
                 [globalFilterFields]="filterFields"
-                [tableStyle]="{ 'min-width': '60rem' }"
+                responsiveLayout="scroll"
                 [rowHover]="true"
                 dataKey="id"
                 [showCurrentPageReport]="true"
-                [rowsPerPageOptions]="[10, 20, 50]"
-                [currentPageReportTemplate]="'portal.sliders.pageReport' | translate"
+                [rowsPerPageOptions]="[10, 25, 50]"
+                [currentPageReportTemplate]="pageReportTemplate"
             >
                 <ng-template #caption>
-                    <div class="flex flex-wrap items-center justify-between gap-3">
-                        <h5 class="m-0">{{ 'portal.sliders.title' | translate }}</h5>
+                    <div class="flex flex-wrap gap-2 items-center justify-between">
                         <p-icon-field class="w-full sm:w-80">
                             <p-inputicon class="pi pi-search" />
                             <input
                                 pInputText
                                 type="text"
-                                class="w-full"
                                 (input)="onGlobalFilter(dt, $event)"
                                 [placeholder]="'portal.sliders.searchPlaceholder' | translate"
+                                class="w-full"
                             />
                         </p-icon-field>
+                        <button
+                            pButton
+                            pRipple
+                            type="button"
+                            icon="pi pi-refresh"
+                            [label]="'portal.sliders.refresh' | translate"
+                            outlined
+                            (click)="loadSliders()"
+                            [disabled]="loading()"
+                        ></button>
                     </div>
                 </ng-template>
                 <ng-template #header>
                     <tr>
-                        <th pSortableColumn="titleEn" style="min-width: 10rem">
+                        <th pSortableColumn="titleEn" class="white-space-nowrap" style="min-width: 10rem">
                             <span class="flex items-center gap-2">
                                 {{ 'portal.sliders.colTitleEn' | translate }}
                                 <p-sortIcon field="titleEn" />
                             </span>
                         </th>
-                        <th pSortableColumn="titleAr" style="min-width: 10rem">
+                        <th pSortableColumn="titleAr" class="white-space-nowrap" style="min-width: 10rem">
                             <span class="flex items-center gap-2">
                                 {{ 'portal.sliders.colTitleAr' | translate }}
                                 <p-sortIcon field="titleAr" />
                             </span>
                         </th>
-                        <th style="min-width: 8rem">{{ 'portal.sliders.colImage' | translate }}</th>
-                        <th style="min-width: 12rem">{{ 'portal.sliders.colDescriptionEn' | translate }}</th>
-                        <th style="min-width: 12rem">{{ 'portal.sliders.colDescriptionAr' | translate }}</th>
-                        <th style="width: 10rem"></th>
+                        <th class="white-space-nowrap" style="min-width: 8rem">{{ 'portal.sliders.colImage' | translate }}</th>
+                        <th class="white-space-nowrap" style="min-width: 12rem">{{ 'portal.sliders.colDescriptionEn' | translate }}</th>
+                        <th class="white-space-nowrap" style="min-width: 12rem">{{ 'portal.sliders.colDescriptionAr' | translate }}</th>
+                        <th class="white-space-nowrap w-20 text-center"></th>
                     </tr>
                 </ng-template>
                 <ng-template #body let-row>
@@ -147,27 +156,36 @@ import { SliderService } from '@/core/services/slider.service';
                         </td>
                         <td class="max-w-20rem white-space-normal">{{ row.descriptionEn }}</td>
                         <td class="max-w-20rem white-space-normal">{{ row.descriptionAr }}</td>
-                        <td>
-                            <p-button
+                        <td class="text-center">
+                            <button
+                                type="button"
+                                pButton
+                                pRipple
                                 icon="pi pi-pencil"
+                                [rounded]="true"
+                                [outlined]="true"
+                                severity="secondary"
                                 class="mr-2"
-                                [rounded]="true"
-                                [outlined]="true"
-                                (onClick)="openEdit(row)"
-                            />
-                            <p-button
+                                (click)="openEdit(row)"
+                            ></button>
+                            <button
+                                type="button"
+                                pButton
+                                pRipple
                                 icon="pi pi-trash"
-                                severity="danger"
                                 [rounded]="true"
                                 [outlined]="true"
-                                (onClick)="confirmDelete($event, row)"
-                            />
+                                severity="danger"
+                                (click)="confirmDelete($event, row)"
+                            ></button>
                         </td>
                     </tr>
                 </ng-template>
                 <ng-template #emptymessage>
                     <tr>
-                        <td colspan="6">{{ 'portal.sliders.empty' | translate }}</td>
+                        <td colspan="6" class="text-center py-6 text-surface-500">
+                            {{ 'portal.sliders.empty' | translate }}
+                        </td>
                     </tr>
                 </ng-template>
             </p-table>
@@ -222,7 +240,7 @@ import { SliderService } from '@/core/services/slider.service';
                             />
                             <p-button
                                 type="button"
-                                [label]="(form.imageUrl?.trim() ? 'portal.sliders.changeImage' : 'portal.sliders.uploadImage') | translate"
+                                [label]="(form.imageUrl.trim() ? 'portal.sliders.changeImage' : 'portal.sliders.uploadImage') | translate"
                                 icon="pi pi-upload"
                                 [text]="true"
                                 [loading]="uploadingImage()"
@@ -247,7 +265,7 @@ import { SliderService } from '@/core/services/slider.service';
         </p-dialog>
     `,
 })
-export class PortalSlidersComponent implements OnInit {
+export class PortalSlidersComponent implements OnInit, OnDestroy {
     private readonly sliderService = inject(SliderService);
     private readonly userProfileService = inject(UserProfileService);
     private readonly messageService = inject(MessageService);
@@ -267,8 +285,21 @@ export class PortalSlidersComponent implements OnInit {
 
     readonly filterFields = ['titleEn', 'titleAr', 'descriptionEn', 'descriptionAr', 'imageUrl'];
 
+    pageReportTemplate = '';
+    private langSub?: Subscription;
+
     ngOnInit(): void {
+        this.refreshLocalizedStrings();
+        this.langSub = this.translate.onLangChange.subscribe(() => this.refreshLocalizedStrings());
         this.loadSliders();
+    }
+
+    ngOnDestroy(): void {
+        this.langSub?.unsubscribe();
+    }
+
+    private refreshLocalizedStrings(): void {
+        this.pageReportTemplate = this.translate.instant('portal.sliders.pageReport');
     }
 
     dialogHeader(): string {
@@ -296,8 +327,7 @@ export class PortalSlidersComponent implements OnInit {
     }
 
     onGlobalFilter(table: Table, event: Event): void {
-        const input = event.target as HTMLInputElement | null;
-        table.filterGlobal(input?.value ?? '', 'contains');
+        table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
     }
 
     onImgError(ev: Event): void {
