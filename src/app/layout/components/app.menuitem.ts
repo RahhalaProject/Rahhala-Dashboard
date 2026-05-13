@@ -8,15 +8,16 @@ import {TooltipModule} from 'primeng/tooltip';
 import {CommonModule} from '@angular/common';
 import {RippleModule} from 'primeng/ripple';
 import {LayoutService} from '@/layout/service/layout.service';
+import {TranslateModule} from '@ngx-translate/core';
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: '[app-menuitem]',
-    imports: [CommonModule, RouterModule, RippleModule, TooltipModule],
+    imports: [CommonModule, RouterModule, RippleModule, TooltipModule, TranslateModule],
     template: `
         <ng-container>
             <div *ngIf="root && item.visible !== false" class="layout-menuitem-root-text">
-                {{ item.label }}
+                {{ item.labelKey ? (item.labelKey | translate) : item.label }}
             </div>
             <a
                 *ngIf="(!item.routerLink || item.items) && item.visible !== false"
@@ -27,11 +28,11 @@ import {LayoutService} from '@/layout/service/layout.service';
                 [attr.target]="item.target"
                 tabindex="0"
                 pRipple
-                [pTooltip]="item.label"
+                [pTooltip]="item.labelKey ? (item.labelKey | translate) : item.label"
                 [tooltipDisabled]="!(isSlim() && root && !active)"
             >
                 <i [ngClass]="item.icon" class="layout-menuitem-icon"></i>
-                <span class="layout-menuitem-text">{{ item.label }}</span>
+                <span class="layout-menuitem-text">{{ item.labelKey ? (item.labelKey | translate) : item.label }}</span>
                 <i class="pi pi-fw pi-angle-down layout-submenu-toggler" *ngIf="item.items"></i>
             </a>
             <a
@@ -59,11 +60,11 @@ import {LayoutService} from '@/layout/service/layout.service';
                 [attr.target]="item.target"
                 tabindex="0"
                 pRipple
-                [pTooltip]="item.label"
+                [pTooltip]="item.labelKey ? (item.labelKey | translate) : item.label"
                 [tooltipDisabled]="!(isSlim() && root)"
             >
                 <i [ngClass]="item.icon" class="layout-menuitem-icon"></i>
-                <span class="layout-menuitem-text">{{ item.label }}</span>
+                <span class="layout-menuitem-text">{{ item.labelKey ? (item.labelKey | translate) : item.label }}</span>
                 <i class="pi pi-fw pi-angle-down layout-submenu-toggler" *ngIf="item.items"></i>
             </a>
 

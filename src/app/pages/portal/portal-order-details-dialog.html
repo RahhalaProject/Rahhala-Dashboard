@@ -1,5 +1,5 @@
 <p-dialog
-    [header]="'Order details'"
+    [header]="'portal.orderDetails.header' | translate"
     [modal]="true"
     [style]="{ width: '50rem', maxWidth: '95vw' }"
     [visible]="visible()"
@@ -7,169 +7,160 @@
     [dismissableMask]="true"
 >
     @if (loading()) {
-        <div class="text-surface-600 dark:text-surface-300 py-4">Loading…</div>
+        <div class="text-surface-600 dark:text-surface-300 py-4">{{ 'portal.orderDetails.loading' | translate }}</div>
     }
 
     @if (!loading() && details(); as d) {
-        <div class="flex flex-wrap gap-2 mb-4">
-            <p-button
-                type="button"
-                severity="danger"
-                label="Cancel order"
-                [disabled]="d.statusId !== 1"
-                (onClick)="openCancelDialog()"
-            />
-        </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-3 text-surface-800 dark:text-surface-100">
             @if (hasValue(d.requestNo)) {
-                <div><strong>Order number:</strong> {{ d.requestNo }}</div>
+                <div><strong>{{ 'portal.orderDetails.orderNumber' | translate }}</strong> {{ d.requestNo }}</div>
             }
             @if (hasValue(d.createdOnUtc)) {
                 <div>
-                    <strong>Order date:</strong>
+                    <strong>{{ 'portal.orderDetails.orderDate' | translate }}</strong>
                     {{ d.createdOnUtc | date: 'medium' }}
                 </div>
             }
             @if (hasValue(d.orderType)) {
                 <div class="flex flex-wrap items-center gap-2">
-                    <strong>Order type:</strong>
+                    <strong>{{ 'portal.orderDetails.orderType' | translate }}</strong>
                     <p-tag [value]="orderTypeText(d)" [severity]="orderTypeSeverity(d)" />
                 </div>
             }
             @if (hasValue(d.statusName)) {
                 <div class="flex flex-wrap items-center gap-2">
-                    <strong>Status:</strong>
+                    <strong>{{ 'portal.orderDetails.status' | translate }}</strong>
                     <p-tag [value]="statusText(d)" [severity]="statusSeverityForDetails(d)" />
                 </div>
             }
             @if (hasValue(d.paymentMethodName)) {
-                <div><strong>Payment method:</strong> {{ d.paymentMethodName }}</div>
+                <div><strong>{{ 'portal.orderDetails.paymentMethod' | translate }}</strong> {{ d.paymentMethodName }}</div>
             }
             @if (hasValue(d.cancelReason)) {
-                <div class="md:col-span-2"><strong>Cancel reason:</strong> {{ d.cancelReason }}</div>
+                <div class="md:col-span-2"><strong>{{ 'portal.orderDetails.fieldCancelReason' | translate }}</strong> {{ d.cancelReason }}</div>
             }
 
             @if (isCarRentalOrder(d)) {
                 @if (hasValue(d.carRental?.companyName)) {
-                    <div><strong>Company:</strong> {{ d.carRental?.companyName }}</div>
+                    <div><strong>{{ 'portal.orderDetails.company' | translate }}</strong> {{ d.carRental?.companyName }}</div>
                 }
                 @if (hasValue(d.carRental?.carTypeName)) {
-                    <div><strong>Car type:</strong> {{ d.carRental?.carTypeName }}</div>
+                    <div><strong>{{ 'portal.orderDetails.carType' | translate }}</strong> {{ d.carRental?.carTypeName }}</div>
                 }
                 @if (hasValue(d.carRental?.shipmentTypeName)) {
-                    <div><strong>Shipment type:</strong> {{ d.carRental?.shipmentTypeName }}</div>
+                    <div><strong>{{ 'portal.orderDetails.shipmentType' | translate }}</strong> {{ d.carRental?.shipmentTypeName }}</div>
                 }
                 @if (hasValue(d.carRental?.weightInTonName)) {
-                    <div><strong>Weight (tons):</strong> {{ d.carRental?.weightInTonName }}</div>
+                    <div><strong>{{ 'portal.orderDetails.weightTons' | translate }}</strong> {{ d.carRental?.weightInTonName }}</div>
                 }
                 @if (hasValue(d.carRental?.palletCapacityName)) {
-                    <div><strong>Load by pallet:</strong> {{ d.carRental?.palletCapacityName }}</div>
+                    <div><strong>{{ 'portal.orderDetails.loadByPallet' | translate }}</strong> {{ d.carRental?.palletCapacityName }}</div>
                 }
                 @if (hasValue(d.carRental?.rentDurationName)) {
-                    <div><strong>Rent duration:</strong> {{ d.carRental?.rentDurationName }}</div>
+                    <div><strong>{{ 'portal.orderDetails.rentDuration' | translate }}</strong> {{ d.carRental?.rentDurationName }}</div>
                 }
                 @if (hasValue(d.carRental?.dryBoxTypeName)) {
-                    <div><strong>Dry box type:</strong> {{ d.carRental?.dryBoxTypeName }}</div>
+                    <div><strong>{{ 'portal.orderDetails.dryBoxType' | translate }}</strong> {{ d.carRental?.dryBoxTypeName }}</div>
                 }
                 @if (hasValue(d.carRental?.fromDate)) {
                     <div>
-                        <strong>From date:</strong>
+                        <strong>{{ 'portal.orderDetails.fromDate' | translate }}</strong>
                         {{ d.carRental?.fromDate | date: 'mediumDate' }}
                     </div>
                 }
                 @if (hasValue(d.carRental?.toDate)) {
                     <div>
-                        <strong>To date:</strong>
+                        <strong>{{ 'portal.orderDetails.toDate' | translate }}</strong>
                         {{ d.carRental?.toDate | date: 'mediumDate' }}
                     </div>
                 }
                 @if (d.carRental?.isFromHeadquarters != null) {
                     <div>
-                        <strong>Pickup source:</strong>
+                        <strong>{{ 'portal.orderDetails.pickupSource' | translate }}</strong>
                         {{ pickupSourceText(d) }}
                     </div>
                 }
                 @if (hasValue(d.carRental?.deliveryAddress?.cityName)) {
-                    <div><strong>City:</strong> {{ d.carRental?.deliveryAddress?.cityName }}</div>
+                    <div><strong>{{ 'portal.orderDetails.city' | translate }}</strong> {{ d.carRental?.deliveryAddress?.cityName }}</div>
                 }
                 @if (hasValue(d.carRental?.deliveryAddress?.provinceName)) {
-                    <div><strong>District:</strong> {{ d.carRental?.deliveryAddress?.provinceName }}</div>
+                    <div><strong>{{ 'portal.orderDetails.district' | translate }}</strong> {{ d.carRental?.deliveryAddress?.provinceName }}</div>
                 }
                 @if (hasValue(d.carRental?.deliveryAddress?.placeName)) {
-                    <div><strong>Pickup place:</strong> {{ d.carRental?.deliveryAddress?.placeName }}</div>
+                    <div><strong>{{ 'portal.orderDetails.pickupPlace' | translate }}</strong> {{ d.carRental?.deliveryAddress?.placeName }}</div>
                 }
                 @if (hasValue(d.carRental?.deliveryAddress?.street)) {
-                    <div><strong>Street:</strong> {{ d.carRental?.deliveryAddress?.street }}</div>
+                    <div><strong>{{ 'portal.orderDetails.street' | translate }}</strong> {{ d.carRental?.deliveryAddress?.street }}</div>
                 }
             }
 
             @if (isCargoShippingOrder(d)) {
                 @if (hasValue(d.cargoShipping?.pickupAddress?.cityName)) {
-                    <div><strong>Origin city:</strong> {{ d.cargoShipping?.pickupAddress?.cityName }}</div>
+                    <div><strong>{{ 'portal.orderDetails.originCity' | translate }}</strong> {{ d.cargoShipping?.pickupAddress?.cityName }}</div>
                 }
                 @if (hasValue(d.cargoShipping?.pickupAddress?.provinceName)) {
-                    <div><strong>District:</strong> {{ d.cargoShipping?.pickupAddress?.provinceName }}</div>
+                    <div><strong>{{ 'portal.orderDetails.district' | translate }}</strong> {{ d.cargoShipping?.pickupAddress?.provinceName }}</div>
                 }
                 @if (hasValue(d.cargoShipping?.pickupAddress?.street)) {
-                    <div><strong>Pickup street:</strong> {{ d.cargoShipping?.pickupAddress?.street }}</div>
+                    <div><strong>{{ 'portal.orderDetails.pickupStreet' | translate }}</strong> {{ d.cargoShipping?.pickupAddress?.street }}</div>
                 }
                 @if (hasValue(d.cargoShipping?.pickupAddress?.placeName)) {
-                    <div><strong>Pickup place:</strong> {{ d.cargoShipping?.pickupAddress?.placeName }}</div>
+                    <div><strong>{{ 'portal.orderDetails.pickupPlace' | translate }}</strong> {{ d.cargoShipping?.pickupAddress?.placeName }}</div>
                 }
 
                 @if (hasValue(d.cargoShipping?.deliveryAddress?.cityName)) {
-                    <div><strong>Destination city:</strong> {{ d.cargoShipping?.deliveryAddress?.cityName }}</div>
+                    <div><strong>{{ 'portal.orderDetails.destinationCity' | translate }}</strong> {{ d.cargoShipping?.deliveryAddress?.cityName }}</div>
                 }
                 @if (hasValue(d.cargoShipping?.deliveryAddress?.provinceName)) {
-                    <div><strong>Neighborhood:</strong> {{ d.cargoShipping?.deliveryAddress?.provinceName }}</div>
+                    <div><strong>{{ 'portal.orderDetails.neighborhood' | translate }}</strong> {{ d.cargoShipping?.deliveryAddress?.provinceName }}</div>
                 }
                 @if (hasValue(d.cargoShipping?.deliveryAddress?.street)) {
-                    <div><strong>Street:</strong> {{ d.cargoShipping?.deliveryAddress?.street }}</div>
+                    <div><strong>{{ 'portal.orderDetails.street' | translate }}</strong> {{ d.cargoShipping?.deliveryAddress?.street }}</div>
                 }
                 @if (hasValue(d.cargoShipping?.deliveryAddress?.placeName)) {
-                    <div><strong>Address:</strong> {{ d.cargoShipping?.deliveryAddress?.placeName }}</div>
+                    <div><strong>{{ 'portal.orderDetails.address' | translate }}</strong> {{ d.cargoShipping?.deliveryAddress?.placeName }}</div>
                 }
 
                 @if (hasValue(d.cargoShipping?.receiver?.name)) {
-                    <div><strong>Receiver name:</strong> {{ d.cargoShipping?.receiver?.name }}</div>
+                    <div><strong>{{ 'portal.orderDetails.receiverName' | translate }}</strong> {{ d.cargoShipping?.receiver?.name }}</div>
                 }
                 @if (hasValue(d.cargoShipping?.receiver?.phone)) {
-                    <div><strong>Phone:</strong> {{ d.cargoShipping?.receiver?.phone }}</div>
+                    <div><strong>{{ 'portal.orderDetails.phone' | translate }}</strong> {{ d.cargoShipping?.receiver?.phone }}</div>
                 }
 
                 @if (hasValue(d.cargoShipping?.shipmentDetails?.requestTypeName)) {
-                    <div><strong>Request type:</strong> {{ d.cargoShipping?.shipmentDetails?.requestTypeName }}</div>
+                    <div><strong>{{ 'portal.orderDetails.requestType' | translate }}</strong> {{ d.cargoShipping?.shipmentDetails?.requestTypeName }}</div>
                 }
                 @if (hasValue(d.cargoShipping?.shipmentDetails?.shipmentTypeName)) {
-                    <div><strong>Shipment type:</strong> {{ d.cargoShipping?.shipmentDetails?.shipmentTypeName }}</div>
+                    <div><strong>{{ 'portal.orderDetails.shipmentType' | translate }}</strong> {{ d.cargoShipping?.shipmentDetails?.shipmentTypeName }}</div>
                 }
                 @if (hasValue(d.cargoShipping?.shipmentDetails?.shipmentSpeed)) {
-                    <div><strong>Shipment speed:</strong> {{ d.cargoShipping?.shipmentDetails?.shipmentSpeed }}</div>
+                    <div><strong>{{ 'portal.orderDetails.shipmentSpeed' | translate }}</strong> {{ d.cargoShipping?.shipmentDetails?.shipmentSpeed }}</div>
                 }
                 @if (hasValue(d.cargoShipping?.shipmentDetails?.weight)) {
-                    <div><strong>Weight:</strong> {{ d.cargoShipping?.shipmentDetails?.weight }}</div>
+                    <div><strong>{{ 'portal.orderDetails.weight' | translate }}</strong> {{ d.cargoShipping?.shipmentDetails?.weight }}</div>
                 }
                 @if (hasValue(d.cargoShipping?.shipmentDetails?.pieces)) {
-                    <div><strong>Pieces:</strong> {{ d.cargoShipping?.shipmentDetails?.pieces }}</div>
+                    <div><strong>{{ 'portal.orderDetails.pieces' | translate }}</strong> {{ d.cargoShipping?.shipmentDetails?.pieces }}</div>
                 }
                 @if (hasValue(d.cargoShipping?.shipmentDetails?.length)) {
-                    <div><strong>Length:</strong> {{ d.cargoShipping?.shipmentDetails?.length }}</div>
+                    <div><strong>{{ 'portal.orderDetails.length' | translate }}</strong> {{ d.cargoShipping?.shipmentDetails?.length }}</div>
                 }
                 @if (hasValue(d.cargoShipping?.shipmentDetails?.width)) {
-                    <div><strong>Width:</strong> {{ d.cargoShipping?.shipmentDetails?.width }}</div>
+                    <div><strong>{{ 'portal.orderDetails.width' | translate }}</strong> {{ d.cargoShipping?.shipmentDetails?.width }}</div>
                 }
                 @if (hasValue(d.cargoShipping?.shipmentDetails?.height)) {
-                    <div><strong>Height:</strong> {{ d.cargoShipping?.shipmentDetails?.height }}</div>
+                    <div><strong>{{ 'portal.orderDetails.height' | translate }}</strong> {{ d.cargoShipping?.shipmentDetails?.height }}</div>
                 }
                 @if (hasValue(d.cargoShipping?.shipmentDetails?.additionalNotes)) {
                     <div class="md:col-span-2">
-                        <strong>Additional notes:</strong> {{ d.cargoShipping?.shipmentDetails?.additionalNotes }}
+                        <strong>{{ 'portal.orderDetails.additionalNotes' | translate }}</strong> {{ d.cargoShipping?.shipmentDetails?.additionalNotes }}
                     </div>
                 }
                 @if (hasValue(d.cargoShipping?.deliveryDate)) {
                     <div>
-                        <strong>Delivery date:</strong>
+                        <strong>{{ 'portal.orderDetails.deliveryDate' | translate }}</strong>
                         {{ d.cargoShipping?.deliveryDate | date: 'mediumDate' }}
                     </div>
                 }
@@ -180,7 +171,7 @@
 
 <p-dialog
     [modal]="true"
-    header="Cancel order"
+    [header]="'portal.orderDetails.cancelDialogHeader' | translate"
     [style]="{ width: '35rem', maxWidth: '95vw' }"
     [visible]="cancelDialogVisible()"
     (visibleChange)="onCancelDialogVisible($event)"
@@ -196,17 +187,17 @@
                 [ngModel]="cancelReasonText()"
                 (ngModelChange)="cancelReasonText.set($event)"
             ></textarea>
-            <label for="cancelReason">Cancel reason</label>
+            <label for="cancelReason">{{ 'portal.orderDetails.labelCancelReason' | translate }}</label>
         </p-iftalabel>
         @if (cancelReasonError() && !cancelReasonText().trim()) {
-            <small class="block mt-1 text-red-600 font-medium">This field is required.</small>
+            <small class="block mt-1 text-red-600 font-medium">{{ 'portal.orderDetails.cancelReasonRequired' | translate }}</small>
         }
     </div>
     <div class="flex flex-wrap gap-2 items-center">
-        <p-button label="Close" severity="secondary" (onClick)="onCancelDialogVisible(false)" />
+        <p-button [label]="'portal.orderDetails.close' | translate" severity="secondary" (onClick)="onCancelDialogVisible(false)" />
         <p-button
             class="ms-auto"
-            label="Confirm"
+            [label]="'portal.orderDetails.confirm' | translate"
             severity="danger"
             [loading]="cancelling()"
             (onClick)="confirmCancelOrder()"

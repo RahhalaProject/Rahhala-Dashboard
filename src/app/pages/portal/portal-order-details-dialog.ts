@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, effect, inject, input, model, signal } from '@angular/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -21,12 +22,14 @@ import { OrderDetailsResponse } from '@/core/models/order-details.model';
         TagModule,
         TextareaModule,
         IftaLabelModule,
+        TranslateModule,
     ],
     templateUrl: './portal-order-details-dialog.html',
 })
 export class PortalOrderDetailsDialog {
     private readonly orderService = inject(OrderService);
     private readonly messageService = inject(MessageService);
+    private readonly translate = inject(TranslateService);
 
     /** Two-way with parent: `[(visible)]="detailsOpen"` */
     readonly visible = model(false);
@@ -91,7 +94,9 @@ export class PortalOrderDetailsDialog {
     pickupSourceText(d: OrderDetailsResponse | null): string {
         const v = d?.carRental?.isFromHeadquarters;
         if (v == null) return '—';
-        return v ? 'Headquarters' : 'My location';
+        return v
+            ? this.translate.instant('portal.orderDetails.pickupHeadquarters')
+            : this.translate.instant('portal.orderDetails.pickupMyLocation');
     }
 
     hasValue(value: unknown): boolean {
@@ -124,8 +129,8 @@ export class PortalOrderDetailsDialog {
                 this.cancelDialogVisible.set(false);
                 this.messageService.add({
                     severity: 'success',
-                    summary: 'Success',
-                    detail: 'Order cancelled successfully.',
+                    summary: this.translate.instant('portal.orderDetails.toastSuccess'),
+                    detail: this.translate.instant('portal.orderDetails.cancelSuccess'),
                 });
                 this.loadDetails(id);
             },
@@ -133,8 +138,8 @@ export class PortalOrderDetailsDialog {
                 this.cancelling.set(false);
                 this.messageService.add({
                     severity: 'error',
-                    summary: 'Error',
-                    detail: 'Failed to cancel order.',
+                    summary: this.translate.instant('portal.orderDetails.toastError'),
+                    detail: this.translate.instant('portal.orderDetails.cancelFailed'),
                 });
             },
         });
@@ -159,8 +164,8 @@ export class PortalOrderDetailsDialog {
                 this.details.set(null);
                 this.messageService.add({
                     severity: 'error',
-                    summary: 'Error',
-                    detail: 'Failed to load order details.',
+                    summary: this.translate.instant('portal.orderDetails.toastError'),
+                    detail: this.translate.instant('portal.orderDetails.loadFailed'),
                 });
             },
         });

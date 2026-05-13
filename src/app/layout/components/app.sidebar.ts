@@ -2,11 +2,12 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { AppMenu } from './app.menu';
 import { LayoutService } from '@/layout/service/layout.service';
 import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: '[app-sidebar]',
     standalone: true,
-    imports: [AppMenu, RouterModule],
+    imports: [AppMenu, RouterModule, TranslateModule],
     template: ` <div
         class="layout-sidebar"
         (mouseenter)="onMouseEnter()"
@@ -16,13 +17,13 @@ import { RouterModule } from '@angular/router';
             <a [routerLink]="['/']" class="app-logo">
                 <img
                     src="/icons/AlrahalaLogo.svg"
-                    alt="Rahhala"
+                    [attr.alt]="'portal.layout.logoAlt' | translate"
                     class="app-logo-normal rahhala-logo"
                     style="height: 50px;"
                 />
                 <img
                     src="/icons/AlrahalaLogo.svg"
-                    alt="Rahhala"
+                    [attr.alt]="'portal.layout.logoAlt' | translate"
                     class="app-logo-small rahhala-logo"
                     style="height: 50px;"
                 />

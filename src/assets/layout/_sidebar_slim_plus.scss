@@ -38,7 +38,7 @@
             }
 
             .layout-content-wrapper {
-                margin-left: 7rem;
+                margin-inline-start: 7rem;
             }
 
             .layout-menu {
@@ -96,7 +96,7 @@
                     > ul {
                         display: none;
                         position: absolute;
-                        left: 7rem;
+                        inset-inline-start: 7rem;
                         top: 0;
                         min-width: 15rem;
                         background-color: var(--surface-overlay);
@@ -109,7 +109,7 @@
                         z-index: 999;
 
                         a {
-                            padding-right: 0.5rem;
+                            padding-inline-end: 0.5rem;
                             color: var(--popup-submenu-item-text-color);
                             border-radius: var(--border-radius);
 
@@ -124,32 +124,32 @@
 
                         li {
                             a {
-                                padding-left: 0.5rem;
+                                padding-inline-start: 0.5rem;
                             }
 
                             li {
                                 a {
-                                    padding-left: 1rem;
+                                    padding-inline-start: 1rem;
                                 }
 
                                 li {
                                     a {
-                                        padding-left: 1.5rem;
+                                        padding-inline-start: 1.5rem;
                                     }
 
                                     li {
                                         a {
-                                            padding-left: 2rem;
+                                            padding-inline-start: 2rem;
                                         }
 
                                         li {
                                             a {
-                                                padding-left: 2.5rem;
+                                                padding-inline-start: 2.5rem;
                                             }
 
                                             li {
                                                 a {
-                                                    padding-left: 3rem;
+                                                    padding-inline-start: 3rem;
                                                 }
                                             }
                                         }

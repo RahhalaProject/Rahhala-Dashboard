@@ -26,16 +26,16 @@ export class AppMenu {
     ngOnInit() {
         this.model = [
             {
-                label: 'Main',
+                labelKey: 'portal.nav.main',
                 icon: 'pi pi-fw pi-compass',
                 items: [
                     {
-                        label: 'Home',
+                        labelKey: 'portal.breadcrumb.home',
                         icon: 'pi pi-fw pi-home',
                         routerLink: ['/home'],
                     },
                     {
-                        label: 'Orders',
+                        labelKey: 'portal.breadcrumb.orders',
                         icon: 'pi pi-fw pi-shopping-bag',
                         routerLink: ['/orders'],
                     },

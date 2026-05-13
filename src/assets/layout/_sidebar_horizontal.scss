@@ -69,7 +69,7 @@
 
                         .layout-submenu-toggler {
                             display: block;
-                            margin-left: auto;
+                            margin-inline-start: auto;
                             transition: transform 0.2s;
                         }
 
@@ -81,8 +81,8 @@
                         .layout-menuitem-text {
                             font-size: 0.875rem;
                             display: block;
-                            margin-left: 0.75rem;
-                            margin-right: 0.75rem;
+                            margin-inline-start: 0.75rem;
+                            margin-inline-end: 0.75rem;
                             white-space: nowrap;
                         }
 
@@ -94,7 +94,7 @@
                     > ul {
                         display: none;
                         position: absolute;
-                        left: auto;
+                        inset-inline-start: auto;
                         top: 3rem;
                         min-width: 15rem;
                         background-color: var(--surface-overlay);
@@ -106,7 +106,7 @@
                         z-index: 999;
 
                         a {
-                            padding-right: 0.5rem;
+                            padding-inline-end: 0.5rem;
                             color: var(--popup-submenu-item-text-color);
                             border-radius: var(--border-radius);
 
@@ -121,32 +121,32 @@
 
                         li {
                             a {
-                                padding-left: 0.5rem;
+                                padding-inline-start: 0.5rem;
                             }
 
                             li {
                                 a {
-                                    padding-left: 1rem;
+                                    padding-inline-start: 1rem;
                                 }
 
                                 li {
                                     a {
-                                        padding-left: 1.5rem;
+                                        padding-inline-start: 1.5rem;
                                     }
 
                                     li {
                                         a {
-                                            padding-left: 2rem;
+                                            padding-inline-start: 2rem;
                                         }
 
                                         li {
                                             a {
-                                                padding-left: 2.5rem;
+                                                padding-inline-start: 2.5rem;
                                             }
 
                                             li {
                                                 a {
-                                                    padding-left: 3rem;
+                                                    padding-inline-start: 3rem;
                                                 }
                                             }
                                         }

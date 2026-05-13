@@ -8,6 +8,7 @@ import Nora from '@primeuix/themes/nora';
 import { PrimeNG } from 'primeng/config';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { LayoutService } from '@/layout/service/layout.service';
+import { LanguageService } from '@/core/services/language.service';
 import { Router } from '@angular/router';
 import { DrawerModule } from 'primeng/drawer';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
@@ -49,7 +50,7 @@ declare type SurfacesType = {
         <button *ngIf="simple" class="layout-config-button config-link" type="button" (click)="toggleConfigSidebar()">
             <i class="pi pi-cog"></i>
         </button>
-        <p-drawer [visible]="visible()" (onHide)="onDrawerHide()" position="right" [transitionOptions]="'.3s cubic-bezier(0, 0, 0.2, 1)'" styleClass="layout-config-sidebar w-80" [header]="'portal.configurator.settings' | translate">
+        <p-drawer [visible]="visible()" (onHide)="onDrawerHide()" [position]="configuratorDrawerPosition()" [transitionOptions]="'.3s cubic-bezier(0, 0, 0.2, 1)'" styleClass="layout-config-sidebar w-80" [header]="'portal.configurator.settings' | translate">
             <div class="flex flex-col gap-4">
                 <div>
                     <span class="text-lg font-semibold">{{ 'portal.configurator.primary' | translate }}</span>
@@ -167,6 +168,13 @@ declare type SurfacesType = {
 })
 export class AppConfigurator implements OnInit, OnDestroy {
     @Input({ transform: booleanAttribute }) simple: boolean = false;
+
+    private readonly language = inject(LanguageService);
+
+    /** English (LTR): opens from the right. Arabic (RTL): opens from the left. */
+    readonly configuratorDrawerPosition = computed(() =>
+        this.language.layoutDirection() === 'rtl' ? 'left' : 'right',
+    );
 
     router = inject(Router);
 

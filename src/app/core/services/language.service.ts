@@ -21,6 +21,9 @@ export class LanguageService {
         this.syncTranslateAndPrimeng(this.lang());
     }
 
+    /** For `[attr.dir]` on shell so fixed sidebar inherits correct bidi (not only `html`). */
+    readonly layoutDirection = computed(() => (this.lang() === 'ar' ? 'rtl' : 'ltr'));
+
     /** Short code for the toggle label (e.g. AR / EN). */
     readonly currentLangCode = computed(() => this.lang().toUpperCase());
 
@@ -58,9 +61,16 @@ export class LanguageService {
 
     private applyDocumentDirection(lang: string): void {
         const html = this.document.documentElement;
-        html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+        const body = this.document.body;
+        const dir = lang === 'ar' ? 'rtl' : 'ltr';
+        html.setAttribute('dir', dir);
+        html.setAttribute('lang', lang);
         html.classList.remove('rtl', 'ltr');
         html.classList.add(lang === 'ar' ? 'rtl' : 'ltr');
+        if (body) {
+            body.setAttribute('dir', dir);
+            body.setAttribute('lang', lang);
+        }
     }
 
     private syncTranslateAndPrimeng(lang: string): void {

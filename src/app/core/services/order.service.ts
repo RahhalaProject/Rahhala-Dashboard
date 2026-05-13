@@ -68,9 +68,9 @@ export class OrderService {
         return { items: [], totalRecords: 0 };
     }
 
-    /** GET /api/v1/Order/order-details/{orderId} */
+    /** GET /api/v1/OrderManagement/{orderId}/details */
     getOrderDetails(orderId: string): Observable<OrderDetailsResponse> {
-        return this.http.get<OrderDetailsResponse>(`${this.apiUrl}/Order/order-details/${orderId}`).pipe(
+        return this.http.get<OrderDetailsResponse>(`${this.apiUrl}/OrderManagement/${orderId}/details`).pipe(
             catchError((err) => {
                 console.error('Order details error:', err);
                 return throwError(() => err);

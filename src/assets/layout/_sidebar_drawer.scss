@@ -67,7 +67,7 @@
                             transition: all 0.1s;
 
                             > span {
-                                margin-right: auto;
+                                margin-inline-end: auto;
                             }
 
                             .layout-menuitem-icon {
@@ -77,7 +77,7 @@
 
                             > .layout-menuitem-root-icon {
                                 display: block;
-                                margin-right: 0.125rem;
+                                margin-inline-end: 0.125rem;
                                 font-size: 1.25rem;
                             }
                         }
@@ -108,8 +108,8 @@
 
             &.layout-drawer {
                 .layout-content-wrapper {
-                    margin-left: 5.25rem;
-                    transition: margin-left 0.3s cubic-bezier(0, 0, 0.2, 1);
+                    margin-inline-start: 5.25rem;
+                    transition: margin-inline-start 0.3s cubic-bezier(0, 0, 0.2, 1);
                     overflow-x: hidden;
                 }
             }
@@ -149,7 +149,7 @@
                         .layout-root-menuitem {
                             > .layout-menuitem-root-text {
                                 padding: 1rem 2rem;
-                                padding-right: 1.25rem;
+                                padding-inline-end: 1.25rem;
                                 opacity: 1;
                                 white-space: nowrap;
                                 transition: all 0.3s;
@@ -163,7 +163,7 @@
                         ul {
                             a {
                                 padding: 0.75rem 2rem;
-                                padding-right: 1.25rem;
+                                padding-inline-end: 1.25rem;
                                 width: auto;
                                 .layout-submenu-toggler {
                                     display: block;
@@ -181,32 +181,32 @@
 
                                 li {
                                     a {
-                                        padding-left: 2.5rem;
+                                        padding-inline-start: 2.5rem;
                                     }
 
                                     li {
                                         a {
-                                            padding-left: 3rem;
+                                            padding-inline-start: 3rem;
                                         }
 
                                         li {
                                             a {
-                                                padding-left: 3.5rem;
+                                                padding-inline-start: 3.5rem;
                                             }
 
                                             li {
                                                 a {
-                                                    padding-left: 4rem;
+                                                    padding-inline-start: 4rem;
                                                 }
 
                                                 li {
                                                     a {
-                                                        padding-left: 5.5rem;
+                                                        padding-inline-start: 5.5rem;
                                                     }
 
                                                     li {
                                                         a {
-                                                            padding-left: 5rem;
+                                                            padding-inline-start: 5rem;
                                                         }
                                                     }
                                                 }
@@ -228,7 +228,7 @@
                 }
 
                 .layout-content-wrapper {
-                    margin-left: 18rem;
+                    margin-inline-start: 18rem;
                 }
             }
         }

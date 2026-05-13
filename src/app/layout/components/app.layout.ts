@@ -10,6 +10,7 @@ import { AppProfileSidebar } from './app.profilesidebar';
 import { ToastModule } from 'primeng/toast';
 import { AuthService } from '@/core/services/auth.service';
 import { UserProfileService } from '@/core/services/user-profile.service';
+import { LanguageService } from '@/core/services/language.service';
 
 @Component({
     selector: 'app-layout',
@@ -24,7 +25,11 @@ import { UserProfileService } from '@/core/services/user-profile.service';
         ToastModule,
     ],
     template: `<p-toast />
-        <div class="layout-container" [ngClass]="containerClass">
+        <div
+            class="layout-container"
+            [ngClass]="containerClass"
+            [attr.dir]="language.layoutDirection()"
+        >
             <div app-sidebar></div>
             <div class="layout-content-wrapper">
                 <div app-topbar></div>
@@ -38,6 +43,8 @@ import { UserProfileService } from '@/core/services/user-profile.service';
         </div> `,
 })
 export class AppLayout {
+    readonly language = inject(LanguageService);
+
     overlayMenuOpenSubscription: Subscription;
 
     menuOutsideClickListener: any;

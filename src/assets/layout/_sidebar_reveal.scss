@@ -54,12 +54,12 @@
                     .layout-root-menuitem {
                         > .layout-menuitem-root-text {
                             > span {
-                                margin-right: auto;
+                                margin-inline-end: auto;
                             }
 
                             > .layout-menuitem-root-icon {
                                 display: block;
-                                margin-right: 0.125rem;
+                                margin-inline-end: 0.125rem;
                             }
                         }
                     }
@@ -74,18 +74,18 @@
 
                             .layout-menuitem-text {
                                 order: 1;
-                                margin-right: auto;
+                                margin-inline-end: auto;
                             }
 
                             .layout-submenu-toggler {
                                 order: 2;
                                 display: none;
-                                margin-right: 0.5rem;
+                                margin-inline-end: 0.5rem;
                             }
 
                             .layout-menuitem-icon {
                                 order: 3;
-                                margin-right: 0;
+                                margin-inline-end: 0;
                                 font-size: 1.25rem;
                                 width: auto;
                             }
@@ -96,8 +96,8 @@
 
             &.layout-reveal {
                 .layout-content-wrapper {
-                    margin-left: 4.25rem;
-                    transition: margin-left 0.3s cubic-bezier(0, 0, 0.2, 1);
+                    margin-inline-start: 4.25rem;
+                    transition: margin-inline-start 0.3s cubic-bezier(0, 0, 0.2, 1);
                 }
             }
 
@@ -148,32 +148,32 @@
 
                                 li {
                                     a {
-                                        padding-left: 2.5rem;
+                                        padding-inline-start: 2.5rem;
                                     }
 
                                     li {
                                         a {
-                                            padding-left: 3rem;
+                                            padding-inline-start: 3rem;
                                         }
 
                                         li {
                                             a {
-                                                padding-left: 3.5rem;
+                                                padding-inline-start: 3.5rem;
                                             }
 
                                             li {
                                                 a {
-                                                    padding-left: 4rem;
+                                                    padding-inline-start: 4rem;
                                                 }
 
                                                 li {
                                                     a {
-                                                        padding-left: 5.5rem;
+                                                        padding-inline-start: 5.5rem;
                                                     }
 
                                                     li {
                                                         a {
-                                                            padding-left: 5rem;
+                                                            padding-inline-start: 5rem;
                                                         }
                                                     }
                                                 }
@@ -195,7 +195,7 @@
                 }
 
                 .layout-content-wrapper {
-                    margin-left: 18rem;
+                    margin-inline-start: 18rem;
                 }
             }
         }

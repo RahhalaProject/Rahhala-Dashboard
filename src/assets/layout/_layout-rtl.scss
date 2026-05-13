@@ -1,0 +1,87 @@
+@use './_sass_variables' as *;
+
+/**
+ * RTL (عربي): مرآة صريحة — الشريط `right: 0` والمحتوى `margin-right: 18rem` بدل اليسار.
+ * LTR يبقى في `_sidebar_vertical` و `_responsive` بـ `left` / `margin-left`.
+ */
+html[dir='rtl'],
+html.rtl {
+    .layout-sidebar {
+        right: 0 !important;
+        left: auto !important;
+        border-left: var(--sidebar-border);
+        border-right: none;
+    }
+
+    .layout-container.layout-transparent-menu .layout-sidebar {
+        border-left: 1px solid transparent !important;
+        border-right: none !important;
+    }
+
+    @media screen and (min-width: $breakpoint) {
+        .layout-container.layout-static:not(.layout-static-inactive) .layout-content-wrapper {
+            margin-right: 18rem !important;
+            margin-left: 0 !important;
+            transition: margin-right var(--layout-section-transition-duration) !important;
+        }
+
+        .layout-container.layout-static-inactive .layout-content-wrapper {
+            margin-right: 0 !important;
+            margin-left: 0 !important;
+        }
+
+        .layout-container.layout-slim .layout-content-wrapper {
+            margin-left: 0 !important;
+            margin-right: 5rem !important;
+            transition: margin-right var(--layout-section-transition-duration) !important;
+        }
+
+        .layout-container.layout-slim-plus .layout-content-wrapper {
+            margin-left: 0 !important;
+            margin-right: 7rem !important;
+            transition: margin-right var(--layout-section-transition-duration) !important;
+        }
+
+        .layout-container.layout-drawer:not(.layout-sidebar-anchored) .layout-content-wrapper {
+            margin-left: 0 !important;
+            margin-right: 5.25rem !important;
+            transition: margin-right 0.3s cubic-bezier(0, 0, 0.2, 1) !important;
+        }
+
+        .layout-container.layout-drawer.layout-sidebar-anchored .layout-content-wrapper {
+            margin-left: 0 !important;
+            margin-right: 18rem !important;
+            transition: margin-right 0.3s cubic-bezier(0, 0, 0.2, 1) !important;
+        }
+
+        .layout-container.layout-reveal:not(.layout-sidebar-anchored) .layout-content-wrapper {
+            margin-left: 0 !important;
+            margin-right: 4.25rem !important;
+            transition: margin-right 0.3s cubic-bezier(0, 0, 0.2, 1) !important;
+        }
+
+        .layout-container.layout-reveal.layout-sidebar-anchored .layout-content-wrapper {
+            margin-left: 0 !important;
+            margin-right: 18rem !important;
+            transition: margin-right 0.3s cubic-bezier(0, 0, 0.2, 1) !important;
+        }
+
+        .layout-container.layout-static-inactive .layout-sidebar {
+            transform: translateX(100%);
+        }
+
+        .layout-container.layout-overlay:not(.layout-overlay-active) .layout-sidebar {
+            transform: translateX(100%);
+        }
+
+        .layout-container.layout-reveal:not(.layout-sidebar-active) .layout-sidebar {
+            transform: translateX(14.75rem);
+        }
+    }
+
+    @media screen and (max-width: ($breakpoint - 1)) {
+        .layout-container:not(.layout-mobile-active) .layout-sidebar {
+            transform: translateX(100%);
+        }
+    }
+}

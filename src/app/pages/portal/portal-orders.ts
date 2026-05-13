@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
@@ -11,6 +12,7 @@ import { RippleModule } from 'primeng/ripple';
 import { TagModule } from 'primeng/tag';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { OrderService } from '@/core/services/order.service';
 import { MyOrderResponse } from '@/core/models/my-order.model';
 import { PortalOrderDetailsDialog } from '@/pages/portal/portal-order-details-dialog';
@@ -36,6 +38,7 @@ interface StatusOption {
         ToastModule,
         RippleModule,
         PortalOrderDetailsDialog,
+        TranslateModule,
     ],
     providers: [MessageService],
     template: `
@@ -44,19 +47,21 @@ interface StatusOption {
         <div class="card">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
                 <div>
-                    <div class="text-2xl font-semibold text-surface-900 dark:text-surface-0">Orders</div>
+                    <div class="text-2xl font-semibold text-surface-900 dark:text-surface-0">
+                        {{ 'portal.orders.title' | translate }}
+                    </div>
                 </div>
                 <div class="flex flex-col sm:flex-row gap-2 sm:items-center">
-                    <label class="text-sm font-medium text-surface-700 dark:text-surface-100 whitespace-nowrap"
-                        >Status</label
-                    >
+                    <label class="text-sm font-medium text-surface-700 dark:text-surface-100 whitespace-nowrap">{{
+                        'portal.orders.filterStatus' | translate
+                    }}</label>
                     <p-select
                         [options]="statusOptions"
                         [ngModel]="selectedOrderStatus"
                         (ngModelChange)="onStatusFilterChange($event)"
                         optionLabel="label"
                         optionValue="value"
-                        placeholder="All"
+                        [placeholder]="'portal.orders.filterPlaceholderAll' | translate"
                         styleClass="min-w-48"
                     />
                 </div>
@@ -75,7 +80,7 @@ interface StatusOption {
                 [totalRecords]="totalRecords"
                 [showCurrentPageReport]="true"
                 responsiveLayout="scroll"
-                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                [currentPageReportTemplate]="pageReportTemplate"
                 [rowsPerPageOptions]="[10, 25, 50]"
                 [globalFilterFields]="[
                     'orderNumber',
@@ -95,7 +100,7 @@ interface StatusOption {
                                 pInputText
                                 type="text"
                                 (input)="onGlobalFilter(dt, $event)"
-                                placeholder="Search orders"
+                                [placeholder]="'portal.orders.searchPlaceholder' | translate"
                                 class="w-full"
                             />
                         </p-icon-field>
@@ -104,7 +109,7 @@ interface StatusOption {
                             pRipple
                             type="button"
                             icon="pi pi-refresh"
-                            label="Refresh"
+                            [label]="'portal.orders.refresh' | translate"
                             outlined
                             (click)="loadOrders()"
                             [disabled]="loading"
@@ -114,27 +119,41 @@ interface StatusOption {
                 <ng-template #header>
                     <tr>
                         <th pSortableColumn="orderNumber" class="white-space-nowrap">
-                            <span class="flex items-center gap-2">Order # <p-sortIcon field="orderNumber" /></span>
+                            <span class="flex items-center gap-2"
+                                >{{ 'portal.orders.colOrderNumber' | translate }} <p-sortIcon field="orderNumber"
+                            /></span>
                         </th>
                         <th pSortableColumn="orderDate" class="white-space-nowrap">
-                            <span class="flex items-center gap-2">Date <p-sortIcon field="orderDate" /></span>
+                            <span class="flex items-center gap-2"
+                                >{{ 'portal.orders.colDate' | translate }} <p-sortIcon field="orderDate"
+                            /></span>
                         </th>
                         <th pSortableColumn="orderTypeName" class="white-space-nowrap">
-                            <span class="flex items-center gap-2">Type <p-sortIcon field="orderTypeName" /></span>
+                            <span class="flex items-center gap-2"
+                                >{{ 'portal.orders.colType' | translate }} <p-sortIcon field="orderTypeName"
+                            /></span>
                         </th>
                         <th pSortableColumn="originCity" class="white-space-nowrap">
-                            <span class="flex items-center gap-2">Origin <p-sortIcon field="originCity" /></span>
+                            <span class="flex items-center gap-2"
+                                >{{ 'portal.orders.colOrigin' | translate }} <p-sortIcon field="originCity"
+                            /></span>
                         </th>
                         <th pSortableColumn="destinationCity" class="white-space-nowrap">
-                            <span class="flex items-center gap-2">Destination <p-sortIcon field="destinationCity" /></span>
+                            <span class="flex items-center gap-2"
+                                >{{ 'portal.orders.colDestination' | translate }} <p-sortIcon field="destinationCity"
+                            /></span>
                         </th>
                         <th pSortableColumn="companyName" class="white-space-nowrap">
-                            <span class="flex items-center gap-2">Company <p-sortIcon field="companyName" /></span>
+                            <span class="flex items-center gap-2"
+                                >{{ 'portal.orders.colCompany' | translate }} <p-sortIcon field="companyName"
+                            /></span>
                         </th>
                         <th pSortableColumn="statusId" class="white-space-nowrap">
-                            <span class="flex items-center gap-2">Status <p-sortIcon field="statusId" /></span>
+                            <span class="flex items-center gap-2"
+                                >{{ 'portal.orders.colStatus' | translate }} <p-sortIcon field="statusId"
+                            /></span>
                         </th>
-                        <th class="white-space-nowrap w-20 text-center">View</th>
+                        <th class="white-space-nowrap w-20 text-center">{{ 'portal.orders.colView' | translate }}</th>
                     </tr>
                 </ng-template>
                 <ng-template #body let-row>
@@ -160,23 +179,31 @@ interface StatusOption {
                                 [text]="true"
                                 severity="secondary"
                                 (click)="openOrderDetails(row)"
-                                [attr.aria-label]="'View details for order ' + (row.orderNumber || row.orderId)"
+                                [attr.aria-label]="
+                                    'portal.orders.viewDetailsAria'
+                                        | translate: { order: row.orderNumber || row.orderId }
+                                "
                             ></button>
                         </td>
                     </tr>
                 </ng-template>
                 <ng-template #emptymessage>
                     <tr>
-                        <td colspan="8" class="text-center py-6 text-surface-500">No orders found.</td>
+                        <td colspan="8" class="text-center py-6 text-surface-500">
+                            {{ 'portal.orders.emptyMessage' | translate }}
+                        </td>
                     </tr>
                 </ng-template>
             </p-table>
         </div>
     `,
 })
-export class PortalOrders {
+export class PortalOrders implements OnInit, OnDestroy {
     private readonly orderService = inject(OrderService);
     private readonly messageService = inject(MessageService);
+    private readonly translate = inject(TranslateService);
+
+    private langSub?: Subscription;
 
     orders: (MyOrderResponse & { statusLabel: string })[] = [];
     loading = false;
@@ -188,15 +215,28 @@ export class PortalOrders {
     orderDetailsOpen = false;
     orderDetailsId: string | null = null;
 
-    readonly statusOptions: StatusOption[] = [
-        { label: 'All statuses', value: null },
-        { label: 'Status 1', value: 1 },
-        { label: 'Status 2', value: 2 },
-        { label: 'Status 3', value: 3 },
-        { label: 'Status 4', value: 4 },
-        { label: 'Status 5', value: 5 },
-        { label: 'Status 6', value: 6 },
-    ];
+    statusOptions: StatusOption[] = [];
+    pageReportTemplate = '';
+
+    ngOnInit(): void {
+        this.refreshLocalizedStrings();
+        this.langSub = this.translate.onLangChange.subscribe(() => this.refreshLocalizedStrings());
+    }
+
+    ngOnDestroy(): void {
+        this.langSub?.unsubscribe();
+    }
+
+    private refreshLocalizedStrings(): void {
+        this.pageReportTemplate = this.translate.instant('portal.orders.pageReport');
+        this.statusOptions = [
+            { label: this.translate.instant('portal.orders.filterAllStatuses'), value: null },
+            ...([1, 2, 3, 4, 5, 6] as const).map((n) => ({
+                label: this.translate.instant(`portal.orders.statusFilter.${n}`),
+                value: n,
+            })),
+        ];
+    }
 
     onLazyLoad(event: TableLazyLoadEvent): void {
         this.tableFirst = event.first ?? 0;
@@ -224,7 +264,9 @@ export class PortalOrders {
                 this.totalRecords = totalRecords;
                 this.orders = (items ?? []).map((o) => ({
                     ...o,
-                    orderTypeName: o.orderTypeName?.trim() || `Type ${o.orderType}`,
+                    orderTypeName:
+                        o.orderTypeName?.trim() ||
+                        this.translate.instant('portal.orders.typeFallback', { type: o.orderType }),
                     statusLabel: this.statusLabel(o.statusId),
                 }));
                 this.loading = false;
@@ -235,8 +277,8 @@ export class PortalOrders {
                 this.totalRecords = 0;
                 this.messageService.add({
                     severity: 'error',
-                    summary: 'Error',
-                    detail: 'Failed to load orders.',
+                    summary: this.translate.instant('portal.orders.toastError'),
+                    detail: this.translate.instant('portal.orders.loadFailed'),
                 });
             },
         });
@@ -252,7 +294,7 @@ export class PortalOrders {
     }
 
     statusLabel(id: number): string {
-        return `Order status ${id}`;
+        return this.translate.instant(`portal.orders.status.${id}`);
     }
 
     statusSeverity(id: number): 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' {

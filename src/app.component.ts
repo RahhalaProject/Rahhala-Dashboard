@@ -25,13 +25,20 @@ export class AppComponent implements OnInit {
     ngOnInit(): void {
         this.primeng.ripple.set(true);
         const lang = localStorage.getItem('lang') || 'ar';
+        const dir = lang === 'ar' ? 'rtl' : 'ltr';
         this.translate.use(lang);
         this.translate.get('primeng').subscribe((res) => {
             this.primeng.setTranslation(res);
         });
         const html = this.document.documentElement;
-        html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+        const body = this.document.body;
+        html.setAttribute('dir', dir);
+        html.setAttribute('lang', lang);
         html.classList.remove('rtl', 'ltr');
         html.classList.add(lang === 'ar' ? 'rtl' : 'ltr');
+        if (body) {
+            body.setAttribute('dir', dir);
+            body.setAttribute('lang', lang);
+        }
     }
 }
