@@ -88,7 +88,6 @@ import { SliderService } from '@/core/services/slider.service';
                 paginatorDropdownAppendTo="body"
                 [globalFilterFields]="filterFields"
                 responsiveLayout="scroll"
-                [rowHover]="true"
                 dataKey="id"
                 [showCurrentPageReport]="true"
                 [rowsPerPageOptions]="[10, 25, 50]"
@@ -133,8 +132,8 @@ import { SliderService } from '@/core/services/slider.service';
                             </span>
                         </th>
                         <th class="white-space-nowrap" style="min-width: 8rem">{{ 'portal.sliders.colImage' | translate }}</th>
-                        <th class="white-space-nowrap" style="min-width: 12rem">{{ 'portal.sliders.colDescriptionEn' | translate }}</th>
-                        <th class="white-space-nowrap" style="min-width: 12rem">{{ 'portal.sliders.colDescriptionAr' | translate }}</th>
+                        <th class="white-space-nowrap" style="min-width: 8rem; max-width: 12rem">{{ 'portal.sliders.colDescriptionEn' | translate }}</th>
+                        <th class="white-space-nowrap" style="min-width: 8rem; max-width: 12rem">{{ 'portal.sliders.colDescriptionAr' | translate }}</th>
                         <th class="white-space-nowrap w-20 text-center"></th>
                     </tr>
                 </ng-template>
@@ -147,37 +146,50 @@ import { SliderService } from '@/core/services/slider.service';
                                 <img
                                     [src]="rowImageSrc(row)"
                                     [alt]="row.titleEn || row.title || ''"
-                                    style="max-height: 2.5rem; max-width: 6rem; object-fit: cover; border-radius: 4px"
+                                    class="block max-h-8 max-w-20 rounded object-cover"
                                     (error)="onImgError($event)"
                                 />
                             } @else {
                                 <span class="text-muted-color">—</span>
                             }
                         </td>
-                        <td class="max-w-20rem white-space-normal">{{ row.descriptionEn }}</td>
-                        <td class="max-w-20rem white-space-normal">{{ row.descriptionAr }}</td>
+                        <td
+                            class="max-w-20rem white-space-nowrap overflow-hidden text-overflow-ellipsis"
+                            [attr.title]="row.descriptionEn || ''"
+                        >
+                            {{ row.descriptionEn }}
+                        </td>
+                        <td
+                            class="max-w-20rem white-space-nowrap overflow-hidden text-overflow-ellipsis"
+                            [attr.title]="row.descriptionAr || ''"
+                        >
+                            {{ row.descriptionAr }}
+                        </td>
                         <td class="text-center">
-                            <button
-                                type="button"
-                                pButton
-                                pRipple
-                                icon="pi pi-pencil"
-                                [rounded]="true"
-                                [outlined]="true"
-                                severity="secondary"
-                                class="mr-2"
-                                (click)="openEdit(row)"
-                            ></button>
-                            <button
-                                type="button"
-                                pButton
-                                pRipple
-                                icon="pi pi-trash"
-                                [rounded]="true"
-                                [outlined]="true"
-                                severity="danger"
-                                (click)="confirmDelete($event, row)"
-                            ></button>
+                            <div class="flex justify-center gap-1">
+                                <button
+                                    type="button"
+                                    pButton
+                                    pRipple
+                                    icon="pi pi-pencil"
+                                    size="small"
+                                    [rounded]="true"
+                                    [text]="true"
+                                    severity="secondary"
+                                    (click)="openEdit(row)"
+                                ></button>
+                                <button
+                                    type="button"
+                                    pButton
+                                    pRipple
+                                    icon="pi pi-trash"
+                                    size="small"
+                                    [rounded]="true"
+                                    [text]="true"
+                                    severity="danger"
+                                    (click)="confirmDelete($event, row)"
+                                ></button>
+                            </div>
                         </td>
                     </tr>
                 </ng-template>

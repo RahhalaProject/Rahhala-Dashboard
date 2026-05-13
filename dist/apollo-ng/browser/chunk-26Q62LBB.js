@@ -95,6 +95,7 @@ import {
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
+  ɵɵattribute,
   ɵɵclassMap,
   ɵɵconditional,
   ɵɵconditionalCreate,
@@ -1489,7 +1490,7 @@ function PortalSlidersComponent_ng_template_15_Template(rf, ctx) {
 function PortalSlidersComponent_ng_template_17_Conditional_6_Template(rf, ctx) {
   if (rf & 1) {
     const _r6 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "img", 34);
+    \u0275\u0275elementStart(0, "img", 35);
     \u0275\u0275listener("error", function PortalSlidersComponent_ng_template_17_Conditional_6_Template_img_error_0_listener($event) {
       \u0275\u0275restoreView(_r6);
       const ctx_r2 = \u0275\u0275nextContext(2);
@@ -1528,20 +1529,20 @@ function PortalSlidersComponent_ng_template_17_Template(rf, ctx) {
     \u0275\u0275elementStart(10, "td", 30);
     \u0275\u0275text(11);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(12, "td", 31)(13, "button", 32);
-    \u0275\u0275listener("click", function PortalSlidersComponent_ng_template_17_Template_button_click_13_listener() {
+    \u0275\u0275elementStart(12, "td", 31)(13, "div", 32)(14, "button", 33);
+    \u0275\u0275listener("click", function PortalSlidersComponent_ng_template_17_Template_button_click_14_listener() {
       const row_r7 = \u0275\u0275restoreView(_r5).$implicit;
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.openEdit(row_r7));
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(14, "button", 33);
-    \u0275\u0275listener("click", function PortalSlidersComponent_ng_template_17_Template_button_click_14_listener($event) {
+    \u0275\u0275elementStart(15, "button", 34);
+    \u0275\u0275listener("click", function PortalSlidersComponent_ng_template_17_Template_button_click_15_listener($event) {
       const row_r7 = \u0275\u0275restoreView(_r5).$implicit;
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.confirmDelete($event, row_r7));
     });
-    \u0275\u0275elementEnd()()();
+    \u0275\u0275elementEnd()()()();
   }
   if (rf & 2) {
     const row_r7 = ctx.$implicit;
@@ -1552,19 +1553,23 @@ function PortalSlidersComponent_ng_template_17_Template(rf, ctx) {
     \u0275\u0275textInterpolate(row_r7.titleAr);
     \u0275\u0275advance(2);
     \u0275\u0275conditional(ctx_r2.rowImageSrc(row_r7) ? 6 : 7);
-    \u0275\u0275advance(3);
-    \u0275\u0275textInterpolate(row_r7.descriptionEn);
     \u0275\u0275advance(2);
-    \u0275\u0275textInterpolate(row_r7.descriptionAr);
-    \u0275\u0275advance(2);
-    \u0275\u0275property("rounded", true)("outlined", true);
+    \u0275\u0275attribute("title", row_r7.descriptionEn || "");
     \u0275\u0275advance();
-    \u0275\u0275property("rounded", true)("outlined", true);
+    \u0275\u0275textInterpolate1(" ", row_r7.descriptionEn, " ");
+    \u0275\u0275advance();
+    \u0275\u0275attribute("title", row_r7.descriptionAr || "");
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate1(" ", row_r7.descriptionAr, " ");
+    \u0275\u0275advance(3);
+    \u0275\u0275property("rounded", true)("text", true);
+    \u0275\u0275advance();
+    \u0275\u0275property("rounded", true)("text", true);
   }
 }
 function PortalSlidersComponent_ng_template_19_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "tr")(1, "td", 35);
+    \u0275\u0275elementStart(0, "tr")(1, "td", 36);
     \u0275\u0275text(2);
     \u0275\u0275pipe(3, "translate");
     \u0275\u0275elementEnd()();
@@ -1577,7 +1582,7 @@ function PortalSlidersComponent_ng_template_19_Template(rf, ctx) {
 function PortalSlidersComponent_ng_template_22_Conditional_26_Template(rf, ctx) {
   if (rf & 1) {
     const _r9 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "img", 52);
+    \u0275\u0275elementStart(0, "img", 53);
     \u0275\u0275listener("error", function PortalSlidersComponent_ng_template_22_Conditional_26_Template_img_error_0_listener($event) {
       \u0275\u0275restoreView(_r9);
       const ctx_r2 = \u0275\u0275nextContext(2);
@@ -1592,7 +1597,7 @@ function PortalSlidersComponent_ng_template_22_Conditional_26_Template(rf, ctx) 
 }
 function PortalSlidersComponent_ng_template_22_Conditional_27_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "span", 49);
+    \u0275\u0275elementStart(0, "span", 50);
     \u0275\u0275text(1);
     \u0275\u0275pipe(2, "translate");
     \u0275\u0275elementEnd();
@@ -1605,11 +1610,11 @@ function PortalSlidersComponent_ng_template_22_Conditional_27_Template(rf, ctx) 
 function PortalSlidersComponent_ng_template_22_Template(rf, ctx) {
   if (rf & 1) {
     const _r8 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 36)(1, "div")(2, "label", 37);
+    \u0275\u0275elementStart(0, "div", 37)(1, "div")(2, "label", 38);
     \u0275\u0275text(3);
     \u0275\u0275pipe(4, "translate");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(5, "input", 38);
+    \u0275\u0275elementStart(5, "input", 39);
     \u0275\u0275twoWayListener("ngModelChange", function PortalSlidersComponent_ng_template_22_Template_input_ngModelChange_5_listener($event) {
       \u0275\u0275restoreView(_r8);
       const ctx_r2 = \u0275\u0275nextContext();
@@ -1617,11 +1622,11 @@ function PortalSlidersComponent_ng_template_22_Template(rf, ctx) {
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(6, "div")(7, "label", 39);
+    \u0275\u0275elementStart(6, "div")(7, "label", 40);
     \u0275\u0275text(8);
     \u0275\u0275pipe(9, "translate");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(10, "input", 40);
+    \u0275\u0275elementStart(10, "input", 41);
     \u0275\u0275twoWayListener("ngModelChange", function PortalSlidersComponent_ng_template_22_Template_input_ngModelChange_10_listener($event) {
       \u0275\u0275restoreView(_r8);
       const ctx_r2 = \u0275\u0275nextContext();
@@ -1629,11 +1634,11 @@ function PortalSlidersComponent_ng_template_22_Template(rf, ctx) {
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(11, "div")(12, "label", 41);
+    \u0275\u0275elementStart(11, "div")(12, "label", 42);
     \u0275\u0275text(13);
     \u0275\u0275pipe(14, "translate");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(15, "textarea", 42);
+    \u0275\u0275elementStart(15, "textarea", 43);
     \u0275\u0275twoWayListener("ngModelChange", function PortalSlidersComponent_ng_template_22_Template_textarea_ngModelChange_15_listener($event) {
       \u0275\u0275restoreView(_r8);
       const ctx_r2 = \u0275\u0275nextContext();
@@ -1641,11 +1646,11 @@ function PortalSlidersComponent_ng_template_22_Template(rf, ctx) {
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(16, "div")(17, "label", 43);
+    \u0275\u0275elementStart(16, "div")(17, "label", 44);
     \u0275\u0275text(18);
     \u0275\u0275pipe(19, "translate");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(20, "textarea", 44);
+    \u0275\u0275elementStart(20, "textarea", 45);
     \u0275\u0275twoWayListener("ngModelChange", function PortalSlidersComponent_ng_template_22_Template_textarea_ngModelChange_20_listener($event) {
       \u0275\u0275restoreView(_r8);
       const ctx_r2 = \u0275\u0275nextContext();
@@ -1653,20 +1658,20 @@ function PortalSlidersComponent_ng_template_22_Template(rf, ctx) {
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(21, "div", 45)(22, "span", 46);
+    \u0275\u0275elementStart(21, "div", 46)(22, "span", 47);
     \u0275\u0275text(23);
     \u0275\u0275pipe(24, "translate");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(25, "div", 47);
-    \u0275\u0275conditionalCreate(26, PortalSlidersComponent_ng_template_22_Conditional_26_Template, 1, 1, "img", 48)(27, PortalSlidersComponent_ng_template_22_Conditional_27_Template, 3, 3, "span", 49);
-    \u0275\u0275elementStart(28, "input", 50, 7);
+    \u0275\u0275elementStart(25, "div", 48);
+    \u0275\u0275conditionalCreate(26, PortalSlidersComponent_ng_template_22_Conditional_26_Template, 1, 1, "img", 49)(27, PortalSlidersComponent_ng_template_22_Conditional_27_Template, 3, 3, "span", 50);
+    \u0275\u0275elementStart(28, "input", 51, 7);
     \u0275\u0275listener("change", function PortalSlidersComponent_ng_template_22_Template_input_change_28_listener($event) {
       \u0275\u0275restoreView(_r8);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.onSliderImageSelected($event));
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(30, "p-button", 51);
+    \u0275\u0275elementStart(30, "p-button", 52);
     \u0275\u0275pipe(31, "translate");
     \u0275\u0275listener("onClick", function PortalSlidersComponent_ng_template_22_Template_p_button_onClick_30_listener() {
       \u0275\u0275restoreView(_r8);
@@ -1698,13 +1703,13 @@ function PortalSlidersComponent_ng_template_22_Template(rf, ctx) {
     \u0275\u0275advance(3);
     \u0275\u0275conditional(ctx_r2.sliderImagePreviewUrl() ? 26 : 27);
     \u0275\u0275advance(4);
-    \u0275\u0275property("label", \u0275\u0275pipeBind1(31, 24, (ctx_r2.form.imageUrl == null ? null : ctx_r2.form.imageUrl.trim()) ? "portal.sliders.changeImage" : "portal.sliders.uploadImage"))("text", true)("loading", ctx_r2.uploadingImage())("disabled", ctx_r2.uploadingImage() || ctx_r2.saving());
+    \u0275\u0275property("label", \u0275\u0275pipeBind1(31, 24, ctx_r2.form.imageUrl.trim() ? "portal.sliders.changeImage" : "portal.sliders.uploadImage"))("text", true)("loading", ctx_r2.uploadingImage())("disabled", ctx_r2.uploadingImage() || ctx_r2.saving());
   }
 }
 function PortalSlidersComponent_ng_template_24_Template(rf, ctx) {
   if (rf & 1) {
     const _r11 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "p-button", 53);
+    \u0275\u0275elementStart(0, "p-button", 54);
     \u0275\u0275pipe(1, "translate");
     \u0275\u0275listener("onClick", function PortalSlidersComponent_ng_template_24_Template_p_button_onClick_0_listener() {
       \u0275\u0275restoreView(_r11);
@@ -1712,7 +1717,7 @@ function PortalSlidersComponent_ng_template_24_Template(rf, ctx) {
       return \u0275\u0275resetView(ctx_r2.hideDialog());
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(2, "p-button", 54);
+    \u0275\u0275elementStart(2, "p-button", 55);
     \u0275\u0275pipe(3, "translate");
     \u0275\u0275listener("onClick", function PortalSlidersComponent_ng_template_24_Template_p_button_onClick_2_listener() {
       \u0275\u0275restoreView(_r11);
@@ -1947,7 +1952,7 @@ var PortalSlidersComponent = class _PortalSlidersComponent {
   static \u0275fac = function PortalSlidersComponent_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _PortalSlidersComponent)();
   };
-  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _PortalSlidersComponent, selectors: [["app-portal-sliders"]], features: [\u0275\u0275ProvidersFeature([MessageService, ConfirmationService])], decls: 26, vars: 28, consts: [["dt", ""], ["caption", ""], ["header", ""], ["body", ""], ["emptymessage", ""], ["content", ""], ["footer", ""], ["sliderPhotoInput", ""], [1, "card"], [1, "flex", "flex-col", "md:flex-row", "md:items-center", "md:justify-between", "gap-4", "mb-4"], [1, "text-2xl", "font-semibold", "text-surface-900", "dark:text-surface-0"], [1, "flex", "flex-wrap", "gap-2"], ["type", "button", "pButton", "", "pRipple", "", "icon", "pi pi-plus", "severity", "secondary", 3, "click", "label"], ["paginatorDropdownAppendTo", "body", "responsiveLayout", "scroll", "dataKey", "id", 3, "value", "loading", "rows", "paginator", "globalFilterFields", "rowHover", "showCurrentPageReport", "rowsPerPageOptions", "currentPageReportTemplate"], [3, "visibleChange", "visible", "header", "modal", "closable", "draggable", "resizable"], [1, "flex", "flex-wrap", "gap-2", "items-center", "justify-between"], [1, "w-full", "sm:w-80"], [1, "pi", "pi-search"], ["pInputText", "", "type", "text", 1, "w-full", 3, "input", "placeholder"], ["pButton", "", "pRipple", "", "type", "button", "icon", "pi pi-refresh", "outlined", "", 3, "click", "label", "disabled"], ["pSortableColumn", "titleEn", 1, "white-space-nowrap", 2, "min-width", "10rem"], [1, "flex", "items-center", "gap-2"], ["field", "titleEn"], ["pSortableColumn", "titleAr", 1, "white-space-nowrap", 2, "min-width", "10rem"], ["field", "titleAr"], [1, "white-space-nowrap", 2, "min-width", "8rem"], [1, "white-space-nowrap", 2, "min-width", "12rem"], [1, "white-space-nowrap", "w-20", "text-center"], [2, "max-height", "2.5rem", "max-width", "6rem", "object-fit", "cover", "border-radius", "4px", 3, "src", "alt"], [1, "text-muted-color"], [1, "max-w-20rem", "white-space-normal"], [1, "text-center"], ["type", "button", "pButton", "", "pRipple", "", "icon", "pi pi-pencil", "severity", "secondary", 1, "mr-2", 3, "click", "rounded", "outlined"], ["type", "button", "pButton", "", "pRipple", "", "icon", "pi pi-trash", "severity", "danger", 3, "click", "rounded", "outlined"], [2, "max-height", "2.5rem", "max-width", "6rem", "object-fit", "cover", "border-radius", "4px", 3, "error", "src", "alt"], ["colspan", "6", 1, "text-center", "py-6", "text-surface-500"], [1, "flex", "flex-col", "gap-4"], ["for", "sliderTitleEn", 1, "mb-2", "block", "font-bold"], ["id", "sliderTitleEn", "pInputText", "", "fluid", "", 3, "ngModelChange", "ngModel"], ["for", "sliderTitleAr", 1, "mb-2", "block", "font-bold"], ["id", "sliderTitleAr", "pInputText", "", "fluid", "", 3, "ngModelChange", "ngModel"], ["for", "sliderDescEn", 1, "mb-2", "block", "font-bold"], ["id", "sliderDescEn", "pTextarea", "", "rows", "3", "fluid", "", 3, "ngModelChange", "ngModel"], ["for", "sliderDescAr", 1, "mb-2", "block", "font-bold"], ["id", "sliderDescAr", "pTextarea", "", "rows", "3", "fluid", "", 3, "ngModelChange", "ngModel"], [1, "flex", "flex-col", "gap-2"], [1, "block", "font-bold"], [1, "flex", "flex-col", "items-center", "gap-2", "rounded", "border", "border-surface-200", "p-4", "dark:border-surface-700"], ["alt", "", 1, "max-h-24", "max-w-full", "rounded", "object-contain", 3, "src"], [1, "text-sm", "text-muted-color"], ["type", "file", "accept", "image/*", 1, "portal-slider-photo-input", 3, "change"], ["type", "button", "icon", "pi pi-upload", 3, "onClick", "label", "text", "loading", "disabled"], ["alt", "", 1, "max-h-24", "max-w-full", "rounded", "object-contain", 3, "error", "src"], ["icon", "pi pi-times", "text", "", 3, "onClick", "label"], ["icon", "pi pi-check", 3, "onClick", "label", "loading", "disabled"]], template: function PortalSlidersComponent_Template(rf, ctx) {
+  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _PortalSlidersComponent, selectors: [["app-portal-sliders"]], features: [\u0275\u0275ProvidersFeature([MessageService, ConfirmationService])], decls: 26, vars: 27, consts: [["dt", ""], ["caption", ""], ["header", ""], ["body", ""], ["emptymessage", ""], ["content", ""], ["footer", ""], ["sliderPhotoInput", ""], [1, "card"], [1, "flex", "flex-col", "md:flex-row", "md:items-center", "md:justify-between", "gap-4", "mb-4"], [1, "text-2xl", "font-semibold", "text-surface-900", "dark:text-surface-0"], [1, "flex", "flex-wrap", "gap-2"], ["type", "button", "pButton", "", "pRipple", "", "icon", "pi pi-plus", "severity", "secondary", 3, "click", "label"], ["paginatorDropdownAppendTo", "body", "responsiveLayout", "scroll", "dataKey", "id", 3, "value", "loading", "rows", "paginator", "globalFilterFields", "showCurrentPageReport", "rowsPerPageOptions", "currentPageReportTemplate"], [3, "visibleChange", "visible", "header", "modal", "closable", "draggable", "resizable"], [1, "flex", "flex-wrap", "gap-2", "items-center", "justify-between"], [1, "w-full", "sm:w-80"], [1, "pi", "pi-search"], ["pInputText", "", "type", "text", 1, "w-full", 3, "input", "placeholder"], ["pButton", "", "pRipple", "", "type", "button", "icon", "pi pi-refresh", "outlined", "", 3, "click", "label", "disabled"], ["pSortableColumn", "titleEn", 1, "white-space-nowrap", 2, "min-width", "10rem"], [1, "flex", "items-center", "gap-2"], ["field", "titleEn"], ["pSortableColumn", "titleAr", 1, "white-space-nowrap", 2, "min-width", "10rem"], ["field", "titleAr"], [1, "white-space-nowrap", 2, "min-width", "8rem"], [1, "white-space-nowrap", 2, "min-width", "8rem", "max-width", "12rem"], [1, "white-space-nowrap", "w-20", "text-center"], [1, "block", "max-h-8", "max-w-20", "rounded", "object-cover", 3, "src", "alt"], [1, "text-muted-color"], [1, "max-w-20rem", "white-space-nowrap", "overflow-hidden", "text-overflow-ellipsis"], [1, "text-center"], [1, "flex", "justify-center", "gap-1"], ["type", "button", "pButton", "", "pRipple", "", "icon", "pi pi-pencil", "size", "small", "severity", "secondary", 3, "click", "rounded", "text"], ["type", "button", "pButton", "", "pRipple", "", "icon", "pi pi-trash", "size", "small", "severity", "danger", 3, "click", "rounded", "text"], [1, "block", "max-h-8", "max-w-20", "rounded", "object-cover", 3, "error", "src", "alt"], ["colspan", "6", 1, "text-center", "py-6", "text-surface-500"], [1, "flex", "flex-col", "gap-4"], ["for", "sliderTitleEn", 1, "mb-2", "block", "font-bold"], ["id", "sliderTitleEn", "pInputText", "", "fluid", "", 3, "ngModelChange", "ngModel"], ["for", "sliderTitleAr", 1, "mb-2", "block", "font-bold"], ["id", "sliderTitleAr", "pInputText", "", "fluid", "", 3, "ngModelChange", "ngModel"], ["for", "sliderDescEn", 1, "mb-2", "block", "font-bold"], ["id", "sliderDescEn", "pTextarea", "", "rows", "3", "fluid", "", 3, "ngModelChange", "ngModel"], ["for", "sliderDescAr", 1, "mb-2", "block", "font-bold"], ["id", "sliderDescAr", "pTextarea", "", "rows", "3", "fluid", "", 3, "ngModelChange", "ngModel"], [1, "flex", "flex-col", "gap-2"], [1, "block", "font-bold"], [1, "flex", "flex-col", "items-center", "gap-2", "rounded", "border", "border-surface-200", "p-4", "dark:border-surface-700"], ["alt", "", 1, "max-h-24", "max-w-full", "rounded", "object-contain", 3, "src"], [1, "text-sm", "text-muted-color"], ["type", "file", "accept", "image/*", 1, "portal-slider-photo-input", 3, "change"], ["type", "button", "icon", "pi pi-upload", 3, "onClick", "label", "text", "loading", "disabled"], ["alt", "", 1, "max-h-24", "max-w-full", "rounded", "object-contain", 3, "error", "src"], ["icon", "pi pi-times", "text", "", 3, "onClick", "label"], ["icon", "pi pi-check", 3, "onClick", "label", "loading", "disabled"]], template: function PortalSlidersComponent_Template(rf, ctx) {
     if (rf & 1) {
       const _r1 = \u0275\u0275getCurrentView();
       \u0275\u0275element(0, "p-toast")(1, "p-confirmdialog");
@@ -1963,7 +1968,7 @@ var PortalSlidersComponent = class _PortalSlidersComponent {
       });
       \u0275\u0275elementEnd()()();
       \u0275\u0275elementStart(11, "p-table", 13, 0);
-      \u0275\u0275template(13, PortalSlidersComponent_ng_template_13_Template, 7, 7, "ng-template", null, 1, \u0275\u0275templateRefExtractor)(15, PortalSlidersComponent_ng_template_15_Template, 21, 15, "ng-template", null, 2, \u0275\u0275templateRefExtractor)(17, PortalSlidersComponent_ng_template_17_Template, 15, 9, "ng-template", null, 3, \u0275\u0275templateRefExtractor)(19, PortalSlidersComponent_ng_template_19_Template, 4, 3, "ng-template", null, 4, \u0275\u0275templateRefExtractor);
+      \u0275\u0275template(13, PortalSlidersComponent_ng_template_13_Template, 7, 7, "ng-template", null, 1, \u0275\u0275templateRefExtractor)(15, PortalSlidersComponent_ng_template_15_Template, 21, 15, "ng-template", null, 2, \u0275\u0275templateRefExtractor)(17, PortalSlidersComponent_ng_template_17_Template, 16, 11, "ng-template", null, 3, \u0275\u0275templateRefExtractor)(19, PortalSlidersComponent_ng_template_19_Template, 4, 3, "ng-template", null, 4, \u0275\u0275templateRefExtractor);
       \u0275\u0275elementEnd()();
       \u0275\u0275elementStart(21, "p-dialog", 14);
       \u0275\u0275twoWayListener("visibleChange", function PortalSlidersComponent_Template_p_dialog_visibleChange_21_listener($event) {
@@ -1976,15 +1981,15 @@ var PortalSlidersComponent = class _PortalSlidersComponent {
     }
     if (rf & 2) {
       \u0275\u0275advance();
-      \u0275\u0275styleMap(\u0275\u0275pureFunction0(25, _c02));
+      \u0275\u0275styleMap(\u0275\u0275pureFunction0(24, _c02));
       \u0275\u0275advance(5);
-      \u0275\u0275textInterpolate1(" ", \u0275\u0275pipeBind1(7, 21, "portal.sliders.title"), " ");
+      \u0275\u0275textInterpolate1(" ", \u0275\u0275pipeBind1(7, 20, "portal.sliders.title"), " ");
       \u0275\u0275advance(3);
-      \u0275\u0275property("label", \u0275\u0275pipeBind1(10, 23, "portal.sliders.new"));
+      \u0275\u0275property("label", \u0275\u0275pipeBind1(10, 22, "portal.sliders.new"));
       \u0275\u0275advance(2);
-      \u0275\u0275property("value", ctx.sliders())("loading", ctx.loading())("rows", 10)("paginator", true)("globalFilterFields", ctx.filterFields)("rowHover", true)("showCurrentPageReport", true)("rowsPerPageOptions", \u0275\u0275pureFunction0(26, _c12))("currentPageReportTemplate", ctx.pageReportTemplate);
+      \u0275\u0275property("value", ctx.sliders())("loading", ctx.loading())("rows", 10)("paginator", true)("globalFilterFields", ctx.filterFields)("showCurrentPageReport", true)("rowsPerPageOptions", \u0275\u0275pureFunction0(25, _c12))("currentPageReportTemplate", ctx.pageReportTemplate);
       \u0275\u0275advance(10);
-      \u0275\u0275styleMap(\u0275\u0275pureFunction0(27, _c22));
+      \u0275\u0275styleMap(\u0275\u0275pureFunction0(26, _c22));
       \u0275\u0275twoWayProperty("visible", ctx.dialogVisible);
       \u0275\u0275property("header", ctx.dialogHeader())("modal", true)("closable", true)("draggable", false)("resizable", false);
     }
@@ -2071,7 +2076,6 @@ var PortalSlidersComponent = class _PortalSlidersComponent {
                 paginatorDropdownAppendTo="body"
                 [globalFilterFields]="filterFields"
                 responsiveLayout="scroll"
-                [rowHover]="true"
                 dataKey="id"
                 [showCurrentPageReport]="true"
                 [rowsPerPageOptions]="[10, 25, 50]"
@@ -2116,8 +2120,8 @@ var PortalSlidersComponent = class _PortalSlidersComponent {
                             </span>
                         </th>
                         <th class="white-space-nowrap" style="min-width: 8rem">{{ 'portal.sliders.colImage' | translate }}</th>
-                        <th class="white-space-nowrap" style="min-width: 12rem">{{ 'portal.sliders.colDescriptionEn' | translate }}</th>
-                        <th class="white-space-nowrap" style="min-width: 12rem">{{ 'portal.sliders.colDescriptionAr' | translate }}</th>
+                        <th class="white-space-nowrap" style="min-width: 8rem; max-width: 12rem">{{ 'portal.sliders.colDescriptionEn' | translate }}</th>
+                        <th class="white-space-nowrap" style="min-width: 8rem; max-width: 12rem">{{ 'portal.sliders.colDescriptionAr' | translate }}</th>
                         <th class="white-space-nowrap w-20 text-center"></th>
                     </tr>
                 </ng-template>
@@ -2130,37 +2134,50 @@ var PortalSlidersComponent = class _PortalSlidersComponent {
                                 <img
                                     [src]="rowImageSrc(row)"
                                     [alt]="row.titleEn || row.title || ''"
-                                    style="max-height: 2.5rem; max-width: 6rem; object-fit: cover; border-radius: 4px"
+                                    class="block max-h-8 max-w-20 rounded object-cover"
                                     (error)="onImgError($event)"
                                 />
                             } @else {
                                 <span class="text-muted-color">\u2014</span>
                             }
                         </td>
-                        <td class="max-w-20rem white-space-normal">{{ row.descriptionEn }}</td>
-                        <td class="max-w-20rem white-space-normal">{{ row.descriptionAr }}</td>
+                        <td
+                            class="max-w-20rem white-space-nowrap overflow-hidden text-overflow-ellipsis"
+                            [attr.title]="row.descriptionEn || ''"
+                        >
+                            {{ row.descriptionEn }}
+                        </td>
+                        <td
+                            class="max-w-20rem white-space-nowrap overflow-hidden text-overflow-ellipsis"
+                            [attr.title]="row.descriptionAr || ''"
+                        >
+                            {{ row.descriptionAr }}
+                        </td>
                         <td class="text-center">
-                            <button
-                                type="button"
-                                pButton
-                                pRipple
-                                icon="pi pi-pencil"
-                                [rounded]="true"
-                                [outlined]="true"
-                                severity="secondary"
-                                class="mr-2"
-                                (click)="openEdit(row)"
-                            ></button>
-                            <button
-                                type="button"
-                                pButton
-                                pRipple
-                                icon="pi pi-trash"
-                                [rounded]="true"
-                                [outlined]="true"
-                                severity="danger"
-                                (click)="confirmDelete($event, row)"
-                            ></button>
+                            <div class="flex justify-center gap-1">
+                                <button
+                                    type="button"
+                                    pButton
+                                    pRipple
+                                    icon="pi pi-pencil"
+                                    size="small"
+                                    [rounded]="true"
+                                    [text]="true"
+                                    severity="secondary"
+                                    (click)="openEdit(row)"
+                                ></button>
+                                <button
+                                    type="button"
+                                    pButton
+                                    pRipple
+                                    icon="pi pi-trash"
+                                    size="small"
+                                    [rounded]="true"
+                                    [text]="true"
+                                    severity="danger"
+                                    (click)="confirmDelete($event, row)"
+                                ></button>
+                            </div>
                         </td>
                     </tr>
                 </ng-template>
@@ -2223,7 +2240,7 @@ var PortalSlidersComponent = class _PortalSlidersComponent {
                             />
                             <p-button
                                 type="button"
-                                [label]="(form.imageUrl?.trim() ? 'portal.sliders.changeImage' : 'portal.sliders.uploadImage') | translate"
+                                [label]="(form.imageUrl.trim() ? 'portal.sliders.changeImage' : 'portal.sliders.uploadImage') | translate"
                                 icon="pi pi-upload"
                                 [text]="true"
                                 [loading]="uploadingImage()"
@@ -2250,7 +2267,7 @@ var PortalSlidersComponent = class _PortalSlidersComponent {
   }], null, null);
 })();
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(PortalSlidersComponent, { className: "PortalSlidersComponent", filePath: "src/app/pages/portal/portal-sliders.ts", lineNumber: 268 });
+  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(PortalSlidersComponent, { className: "PortalSlidersComponent", filePath: "src/app/pages/portal/portal-sliders.ts", lineNumber: 280 });
 })();
 function emptyForm() {
   return {
@@ -2264,4 +2281,4 @@ function emptyForm() {
 export {
   PortalSlidersComponent
 };
-//# sourceMappingURL=chunk-TAR665LN.js.map
+//# sourceMappingURL=chunk-26Q62LBB.js.map

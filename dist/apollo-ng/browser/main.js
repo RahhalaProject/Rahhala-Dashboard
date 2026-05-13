@@ -4397,7 +4397,7 @@ var appRoutes = [
       },
       {
         path: "sliders",
-        loadComponent: () => import("./chunk-TAR665LN.js").then((c2) => c2.PortalSlidersComponent),
+        loadComponent: () => import("./chunk-26Q62LBB.js").then((c2) => c2.PortalSlidersComponent),
         data: { breadcrumbKey: "portal.breadcrumb.sliders" }
       }
     ]
