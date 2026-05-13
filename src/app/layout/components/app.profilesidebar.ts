@@ -4,6 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { DrawerModule } from 'primeng/drawer';
 import { AvatarModule } from 'primeng/avatar';
 import { LayoutService } from '@/layout/service/layout.service';
+import { LanguageService } from '@/core/services/language.service';
 import { AuthService } from '@/core/services/auth.service';
 import { User } from '@/core/models/user.model';
 import { ProfileSettingsDialogComponent } from '@/core/components/profile-settings-dialog/profile-settings-dialog.component';
@@ -27,7 +28,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
         <p-drawer
             [visible]="visible()"
             (onHide)="onDrawerHide()"
-            position="right"
+            [position]="profileDrawerPosition()"
             [transitionOptions]="'.3s cubic-bezier(0, 0, 0.2, 1)'"
             styleClass="layout-profile-sidebar w-full sm:w-25rem"
         >
@@ -55,12 +56,12 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
                         <button
                             type="button"
                             (click)="openProfileSettings()"
-                            class="cursor-pointer flex w-full text-left mb-4 p-4 items-center border border-surface-200 dark:border-surface-700 rounded hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-150 bg-transparent border-solid"
+                            class="cursor-pointer flex w-full text-start mb-4 p-4 items-center border border-surface-200 dark:border-surface-700 rounded hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-150 bg-transparent border-solid"
                         >
                             <span>
                                 <i class="pi pi-cog text-xl text-primary"></i>
                             </span>
-                            <div class="ml-4">
+                            <div class="ms-4">
                                 <span class="mb-2 font-semibold">{{ 'portal.profile.profileSettings' | translate }}</span>
                             </div>
                         </button>
@@ -70,12 +71,12 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
                             tabindex="0"
                             (click)="logout(); $event.preventDefault()"
                             (keydown.enter)="logout()"
-                            class="cursor-pointer flex mb-4 p-4 items-center border border-surface-200 dark:border-surface-700 rounded hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-150"
+                            class="cursor-pointer flex mb-4 p-4 items-center border border-surface-200 dark:border-surface-700 rounded hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-150 text-start"
                         >
                             <span>
                                 <i class="pi pi-power-off text-xl text-primary"></i>
                             </span>
-                            <div class="ml-4">
+                            <div class="ms-4">
                                 <span class="mb-2 font-semibold">{{ 'portal.profile.signOut' | translate }}</span>
                             </div>
                         </a>
@@ -90,6 +91,12 @@ export class AppProfileSidebar {
     readonly authService = inject(AuthService);
     private readonly appConfig = inject(APP_CONFIG);
     private readonly translate = inject(TranslateService);
+    private readonly language = inject(LanguageService);
+
+    /** English (LTR): opens from the right. Arabic (RTL): opens from the left. */
+    readonly profileDrawerPosition = computed(() =>
+        this.language.layoutDirection() === 'rtl' ? 'left' : 'right',
+    );
 
     profileSettingsVisible = false;
 

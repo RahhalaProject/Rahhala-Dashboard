@@ -2667,6 +2667,9 @@ var AppProfileSidebar = class _AppProfileSidebar {
   authService = inject(AuthService);
   appConfig = inject(APP_CONFIG);
   translate = inject(TranslateService);
+  language = inject(LanguageService);
+  /** English (LTR): opens from the right. Arabic (RTL): opens from the left. */
+  profileDrawerPosition = computed(() => this.language.layoutDirection() === "rtl" ? "left" : "right", ...ngDevMode ? [{ debugName: "profileDrawerPosition" }] : []);
   profileSettingsVisible = false;
   visible = computed(() => this.layoutService.layoutState().profileSidebarVisible, ...ngDevMode ? [{ debugName: "visible" }] : []);
   avatarUrl(user) {
@@ -2703,7 +2706,7 @@ var AppProfileSidebar = class _AppProfileSidebar {
   static \u0275fac = function AppProfileSidebar_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _AppProfileSidebar)();
   };
-  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _AppProfileSidebar, selectors: [["", "app-profilesidebar", ""]], attrs: _c07, decls: 23, vars: 12, consts: [[3, "visibleChange", "visible"], ["position", "right", "styleClass", "layout-profile-sidebar w-full sm:w-25rem", 3, "onHide", "visible", "transitionOptions"], [1, "flex", "flex-col", "mx-auto", "md:mx-0"], [1, "flex", "items-start", "gap-4", "mb-8", "pb-6", "border-b", "border-surface-200", "dark:border-surface-700"], [1, "list-none", "m-0", "p-0"], ["type", "button", 1, "cursor-pointer", "flex", "w-full", "text-left", "mb-4", "p-4", "items-center", "border", "border-surface-200", "dark:border-surface-700", "rounded", "hover:bg-surface-100", "dark:hover:bg-surface-800", "transition-colors", "duration-150", "bg-transparent", "border-solid", 3, "click"], [1, "pi", "pi-cog", "text-xl", "text-primary"], [1, "ml-4"], [1, "mb-2", "font-semibold"], ["tabindex", "0", 1, "cursor-pointer", "flex", "mb-4", "p-4", "items-center", "border", "border-surface-200", "dark:border-surface-700", "rounded", "hover:bg-surface-100", "dark:hover:bg-surface-800", "transition-colors", "duration-150", 3, "click", "keydown.enter"], [1, "pi", "pi-power-off", "text-xl", "text-primary"], ["shape", "circle", 3, "image", "label"], [1, "flex", "flex-col", "gap-0.5", "min-w-0"], [1, "font-semibold", "text-surface-900", "dark:text-surface-0", "leading-tight"], [1, "text-sm", "text-surface-600", "dark:text-surface-400", "break-all"], [1, "text-surface-500", "dark:text-surface-400", "font-medium", "mb-8"]], template: function AppProfileSidebar_Template(rf, ctx) {
+  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _AppProfileSidebar, selectors: [["", "app-profilesidebar", ""]], attrs: _c07, decls: 23, vars: 13, consts: [[3, "visibleChange", "visible"], ["styleClass", "layout-profile-sidebar w-full sm:w-25rem", 3, "onHide", "visible", "position", "transitionOptions"], [1, "flex", "flex-col", "mx-auto", "md:mx-0"], [1, "flex", "items-start", "gap-4", "mb-8", "pb-6", "border-b", "border-surface-200", "dark:border-surface-700"], [1, "list-none", "m-0", "p-0"], ["type", "button", 1, "cursor-pointer", "flex", "w-full", "text-start", "mb-4", "p-4", "items-center", "border", "border-surface-200", "dark:border-surface-700", "rounded", "hover:bg-surface-100", "dark:hover:bg-surface-800", "transition-colors", "duration-150", "bg-transparent", "border-solid", 3, "click"], [1, "pi", "pi-cog", "text-xl", "text-primary"], [1, "ms-4"], [1, "mb-2", "font-semibold"], ["tabindex", "0", 1, "cursor-pointer", "flex", "mb-4", "p-4", "items-center", "border", "border-surface-200", "dark:border-surface-700", "rounded", "hover:bg-surface-100", "dark:hover:bg-surface-800", "transition-colors", "duration-150", "text-start", 3, "click", "keydown.enter"], [1, "pi", "pi-power-off", "text-xl", "text-primary"], ["shape", "circle", 3, "image", "label"], [1, "flex", "flex-col", "gap-0.5", "min-w-0"], [1, "font-semibold", "text-surface-900", "dark:text-surface-0", "leading-tight"], [1, "text-sm", "text-surface-600", "dark:text-surface-400", "break-all"], [1, "text-surface-500", "dark:text-surface-400", "font-medium", "mb-8"]], template: function AppProfileSidebar_Template(rf, ctx) {
     if (rf & 1) {
       \u0275\u0275elementStart(0, "app-profile-settings-dialog", 0);
       \u0275\u0275twoWayListener("visibleChange", function AppProfileSidebar_Template_app_profile_settings_dialog_visibleChange_0_listener($event) {
@@ -2746,16 +2749,16 @@ var AppProfileSidebar = class _AppProfileSidebar {
       \u0275\u0275elementEnd()()()()()()();
     }
     if (rf & 2) {
-      let tmp_3_0;
+      let tmp_4_0;
       \u0275\u0275twoWayProperty("visible", ctx.profileSettingsVisible);
       \u0275\u0275advance();
-      \u0275\u0275property("visible", ctx.visible())("transitionOptions", ".3s cubic-bezier(0, 0, 0.2, 1)");
+      \u0275\u0275property("visible", ctx.visible())("position", ctx.profileDrawerPosition())("transitionOptions", ".3s cubic-bezier(0, 0, 0.2, 1)");
       \u0275\u0275advance(2);
-      \u0275\u0275conditional((tmp_3_0 = \u0275\u0275pipeBind1(4, 6, ctx.authService.currentUser$)) ? 3 : 5, tmp_3_0);
+      \u0275\u0275conditional((tmp_4_0 = \u0275\u0275pipeBind1(4, 7, ctx.authService.currentUser$)) ? 3 : 5, tmp_4_0);
       \u0275\u0275advance(10);
-      \u0275\u0275textInterpolate(\u0275\u0275pipeBind1(14, 8, "portal.profile.profileSettings"));
+      \u0275\u0275textInterpolate(\u0275\u0275pipeBind1(14, 9, "portal.profile.profileSettings"));
       \u0275\u0275advance(8);
-      \u0275\u0275textInterpolate(\u0275\u0275pipeBind1(22, 10, "portal.profile.signOut"));
+      \u0275\u0275textInterpolate(\u0275\u0275pipeBind1(22, 11, "portal.profile.signOut"));
     }
   }, dependencies: [
     ButtonModule,
@@ -2788,7 +2791,7 @@ var AppProfileSidebar = class _AppProfileSidebar {
         <p-drawer
             [visible]="visible()"
             (onHide)="onDrawerHide()"
-            position="right"
+            [position]="profileDrawerPosition()"
             [transitionOptions]="'.3s cubic-bezier(0, 0, 0.2, 1)'"
             styleClass="layout-profile-sidebar w-full sm:w-25rem"
         >
@@ -2816,12 +2819,12 @@ var AppProfileSidebar = class _AppProfileSidebar {
                         <button
                             type="button"
                             (click)="openProfileSettings()"
-                            class="cursor-pointer flex w-full text-left mb-4 p-4 items-center border border-surface-200 dark:border-surface-700 rounded hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-150 bg-transparent border-solid"
+                            class="cursor-pointer flex w-full text-start mb-4 p-4 items-center border border-surface-200 dark:border-surface-700 rounded hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-150 bg-transparent border-solid"
                         >
                             <span>
                                 <i class="pi pi-cog text-xl text-primary"></i>
                             </span>
-                            <div class="ml-4">
+                            <div class="ms-4">
                                 <span class="mb-2 font-semibold">{{ 'portal.profile.profileSettings' | translate }}</span>
                             </div>
                         </button>
@@ -2831,12 +2834,12 @@ var AppProfileSidebar = class _AppProfileSidebar {
                             tabindex="0"
                             (click)="logout(); $event.preventDefault()"
                             (keydown.enter)="logout()"
-                            class="cursor-pointer flex mb-4 p-4 items-center border border-surface-200 dark:border-surface-700 rounded hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-150"
+                            class="cursor-pointer flex mb-4 p-4 items-center border border-surface-200 dark:border-surface-700 rounded hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-150 text-start"
                         >
                             <span>
                                 <i class="pi pi-power-off text-xl text-primary"></i>
                             </span>
-                            <div class="ml-4">
+                            <div class="ms-4">
                                 <span class="mb-2 font-semibold">{{ 'portal.profile.signOut' | translate }}</span>
                             </div>
                         </a>
@@ -2849,7 +2852,7 @@ var AppProfileSidebar = class _AppProfileSidebar {
   }], null, null);
 })();
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(AppProfileSidebar, { className: "AppProfileSidebar", filePath: "src/app/layout/components/app.profilesidebar.ts", lineNumber: 88 });
+  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(AppProfileSidebar, { className: "AppProfileSidebar", filePath: "src/app/layout/components/app.profilesidebar.ts", lineNumber: 89 });
 })();
 
 // src/app/layout/components/app.layout.ts
